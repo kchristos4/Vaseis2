@@ -1,7 +1,7 @@
 import pandas as pd
 import os,subprocess
 
-#subprocess.run("cls" if subprocess.os.name == "nt" else "clear", shell=True)
+subprocess.run("cls" if subprocess.os.name == "nt" else "clear", shell=True)
 
 df_countries = pd.read_csv('countries.csv',encoding='latin-1')
 df_age_specific_fertility_rates = pd.read_csv('age_specific_fertility_rates.csv')
@@ -25,14 +25,14 @@ df_age_specific_fertility_rates_on_ISO = pd.merge(df_age_specific_fertility_rate
 name_country_codes = df_age_specific_fertility_rates_on_Name['country_code'].unique()
 
 
-#738 entries
+#738 entries 
 df_rows_in_ISO_missing_from_NAME = df_age_specific_fertility_rates_on_ISO[~df_age_specific_fertility_rates_on_ISO['country_code'].isin(name_country_codes)]
 
 df_age_specific_fertility_rates = pd.concat([df_rows_in_ISO_missing_from_NAME,df_age_specific_fertility_rates_on_Name])
 
 
-print(df_age_specific_fertility_rates)
-
+'''print(df_age_specific_fertility_rates)
+'''
 
 
 
@@ -44,10 +44,10 @@ merged_df2 = pd.merge(df_age_specific_fertility_rates, df_copy, on='country_name
 missing_rows = merged_df2[merged_df2['_merge']== 'right_only']
 
 print(missing_rows['country_name'].unique())
-print(missing_rows)
-print(df_countries['Display_Name'].unique())
+'''print(missing_rows)
+print(df_countries['Display_Name'].unique())'''
 
 fert_country_codes = df_age_specific_fertility_rates['country_code'].unique()
 countries_country_codes = df_countries['ISO'].unique()
-print(list(set(fert_country_codes)-set(countries_country_codes)))
-############################################################################
+'''print(list(set(fert_country_codes)-set(countries_country_codes)))
+'''############################################################################
