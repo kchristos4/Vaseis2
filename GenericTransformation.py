@@ -22,19 +22,45 @@ columns_of_countries = [['ISO',2],['ISO3',3],['ISO_Code',0],['FIPS',2],['Display
 # 2  -> 2 CHARACTERS
 # 3  -> 3 CHARACTERS
 
+for i in range(len(files)):
+    print(f" {i} : {files[i]}")
+fileToMatch = files[int(input(f"choose file number (0 - {len(files)-1}) : "))]
+print(fileToMatch)
 
+columnsToMatch = []
+column = ''
+while column != '-1':
+    column = input(f"choose column to match (if -1 no more arguments will be given): ")
+    if column!='-1':
+        columnsToMatch.append(column)
 
-
-df_income_by_country = pd.read_csv('Income by Country.csv',encoding='latin-1')
-
-
-'''
+df1 = pd.read_csv(fileToMatch)
 df_countries = pd.read_csv('countries.csv',encoding='latin-1')
-df_age_specific_fertility_rates = pd.read_csv('age_specific_fertility_rates.csv')
+
 
 #keep a copy to check original table
-df_copy = df_age_specific_fertility_rates
-
+df_copy = df1
+tempTypeList = []
+for col in columnsToMatch:
+    columnLengths = [len(i) for i in df1[col]]
+    minLength = min(columnLengths)
+    maxLength = max(columnLengths)
+    diff = maxLength-minLength
+    if diff == 0:
+        if maxLength == 2:
+            tempTypeList.append(2)
+        elif maxLength ==3:
+            tempTypeList.append(3)
+    else:
+        if df1[col].dropna().iloc[1].isalpha() :
+            tempTypeList.append(-1) #string
+        elif not (df1[col].dropna().iloc[1].isalpha()):
+            tempTypeList.append(0)  #integer
+    
+print(tempTypeList)
+columnsToMatch = [[columnsToMatch[i],tempTypeList[i]] for i in range(len(columnsToMatch))]
+print(columnsToMatch)
+'''
 
 merged_df = pd.merge(df_countries[['ISO_Code', 'Display_Name']], df_age_specific_fertility_rates[['country_name', 'country_code']], left_on='Display_Name', right_on='country_name')
 merged_df1 = pd.merge(df_countries[['ISO_Code', 'ISO']], df_age_specific_fertility_rates[['country_name', 'country_code']], left_on='ISO', right_on='country_code')
