@@ -3,6 +3,32 @@ import os,subprocess
 
 subprocess.run("cls" if subprocess.os.name == "nt" else "clear", shell=True)
 
+files = os.listdir(os.getcwd())
+print(files)
+tempFiles= []
+for file in files:
+    if file.split('.')[1] == "csv":
+        if not (file.split('.')[0][:8] == 'modified'):
+            tempFiles.append(file)
+files = tempFiles
+files.remove('countries.csv')
+for f in files:
+    print(f)
+
+
+columns_of_countries = [['ISO',2],['ISO3',3],['ISO_Code',0],['FIPS',2],['Display_Name',-1],['Official_Name',-1]]
+#-1 -> N CHARACTERS STRING
+# 0  -> N CHARACTERS ONLY INTS
+# 2  -> 2 CHARACTERS
+# 3  -> 3 CHARACTERS
+
+
+
+
+df_income_by_country = pd.read_csv('Income by Country.csv',encoding='latin-1')
+
+
+'''
 df_countries = pd.read_csv('countries.csv',encoding='latin-1')
 df_age_specific_fertility_rates = pd.read_csv('age_specific_fertility_rates.csv')
 
@@ -46,10 +72,11 @@ merged_df2 = pd.merge(df_age_specific_fertility_rates, df_copy, on='country_name
 missing_rows = merged_df2[merged_df2['_merge']== 'right_only']
 
 print(missing_rows['country_name'].unique())
-'''print(missing_rows)
-print(df_countries['Display_Name'].unique())'''
+#print(missing_rows)
+#print(df_countries['Display_Name'].unique())
 
 fert_country_codes = df_age_specific_fertility_rates['country_code'].unique()
 countries_country_codes = df_countries['ISO'].unique()
-'''print(list(set(fert_country_codes)-set(countries_country_codes)))
-'''############################################################################
+#print(list(set(fert_country_codes)-set(countries_country_codes)))
+############################################################################
+'''
