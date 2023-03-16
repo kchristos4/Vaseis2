@@ -4,16 +4,24 @@ import os,subprocess
 subprocess.run("cls" if subprocess.os.name == "nt" else "clear", shell=True)
 
 files = os.listdir(os.getcwd())
+if not os.path.exists("modified"):
+    os.mkdir("modified")
 print(files)
+
 tempFiles= []
+#if a file is a folder remove it from the list
+for file in files:
+    if os.path.isdir(file):
+        files.remove(file)
+
+#get the correct csv files
 for file in files:
     if file.split('.')[1] == "csv":
         if not (file.split('.')[0][:8] == 'modified'):
             tempFiles.append(file)
 files = tempFiles
 files.remove('countries.csv')
-for f in files:
-    print(f)
+
 
 
 columns_of_countries = [['ISO',2],['ISO3',3],['ISO_Code',0],['FIPS',2],['Display_Name',-1],['Official_Name',-1]]
@@ -22,10 +30,129 @@ columns_of_countries = [['ISO',2],['ISO3',3],['ISO_Code',0],['FIPS',2],['Display
 # 2  -> 2 CHARACTERS
 # 3  -> 3 CHARACTERS
 
+
+def ModifyFile(FP,columnsToMatch):
+    fileToMatch = files[int(FP)]
+    print(f"Modifying file named '{fileToMatch}' ...")
+
+    
+
+    df1 = pd.read_csv(fileToMatch)
+    columnsToMatch = [i for i in columnsToMatch if i in df1.columns]
+    df_countries = pd.read_csv('countries.csv',encoding='latin-1')
+
+
+    tempTypeList = []
+    for col in columnsToMatch:
+        columnLengths = [len(i) for i in df1[col]]
+        minLength = min(columnLengths)
+        maxLength = max(columnLengths)
+        diff = maxLength-minLength
+        if diff == 0:
+            if maxLength == 2:
+                tempTypeList.append(2)
+            elif maxLength ==3:
+                tempTypeList.append(3)
+        else:
+            if df1[col].dropna().iloc[1].isalpha() :
+                tempTypeList.append(-1) #string
+            elif not (df1[col].dropna().iloc[1].isalpha()):
+                tempTypeList.append(0)  #integer
+        
+    columnsToMatch = [[columnsToMatch[i],tempTypeList[i]] for i in range(len(columnsToMatch))]
+
+
+
+
+
+
+    #find all dataframes created from matching Country columns with ourCSVfile columns
+    all_dataframes = []
+    for col in columnsToMatch:
+        col_name = col[0]
+        col_type = col[1]
+        matching_columns_from_countries = [i for i in columns_of_countries if i[1]==col_type]
+        dataframes_for_this_column_matching = []
+        for c in matching_columns_from_countries:
+            temp_df = pd.merge(df_countries[['ISO_Code', c[0]]], df1[[col_name]], left_on=c[0], right_on=col_name)
+            temp_df = temp_df.drop([c[0]],axis=1).drop_duplicates()
+            temp_df1 = pd.merge(df1,temp_df,on=col_name)
+            dataframes_for_this_column_matching.append([temp_df1,[c[0],col_name]])
+            
+        all_dataframes.append(dataframes_for_this_column_matching)
+
+
+
+    counter = 0
+    if all_dataframes!=[]:
+        counter = sum(len(i) for i in all_dataframes)
+        if counter!=0:
+            #find most effective matching and remove it from all_dataframes
+            maxShape=-1
+            most_effective_df = pd.DataFrame()
+            ptr_to_all_dataframes = -1
+            ptr_to_subList = -1
+            i=-1
+            for subList in all_dataframes:
+                i+=1
+                j=-1
+                for df in subList:
+                    j+=1
+                    if df[0].shape[0] > maxShape:
+                        maxShape = df[0].shape[0]
+                        most_effective_df = df[0]
+                        merged_on = df[1][1]
+                        ptr_to_all_dataframes = i
+                        ptr_to_subList = j
+            del all_dataframes[ptr_to_all_dataframes][ptr_to_subList]
+                    
+
+
+        counter-=1
+
+    while counter>0:
+        counter-=1
+
+        #find next most effective matching and remove it from all_dataframes
+        maxShape=-1
+        second_most_effective_df = pd.DataFrame()
+        ptr_to_all_dataframes = -1
+        ptr_to_subList = -1
+        i=-1
+        for subList in all_dataframes:
+            i+=1
+            j=-1
+            for df in subList:
+                j+=1
+                if df[0].shape[0] > maxShape:
+                    maxShape = df[0].shape[0]
+                    second_most_effective_df = df[0]
+                    merged_on = df[1][1]
+                    ptr_to_all_dataframes = i
+                    ptr_to_subList = j
+        del all_dataframes[ptr_to_all_dataframes][ptr_to_subList]
+
+        #find all rows in second most effective that dont exist in most effective
+        uniques_from_most_effective = most_effective_df[merged_on].unique()
+        rows_in_second_missing_from_first = second_most_effective_df[~second_most_effective_df[merged_on].isin(uniques_from_most_effective)]
+
+        #our new most effective is the previous mostEffective += second most effective (ex. 14072 + 738 = 14810 rows)
+        most_effective_df = pd.concat([most_effective_df,second_most_effective_df])
+
+        #create the modified csv
+        
+        modified_File_Name = 'modified\modified_'+fileToMatch
+        most_effective_df.to_csv(modified_File_Name,index=False)
+
+
+
+
+
 for i in range(len(files)):
     print(f" {i} : {files[i]}")
-fileToMatch = files[int(input(f"choose file number (0 - {len(files)-1}) : "))]
-print(fileToMatch)
+
+print()
+filePosition = input(f"choose file number [0 - {len(files)-1}] ( -1 -> Modify all csv files in folder ) : ")
 
 columnsToMatch = []
 column = ''
@@ -34,75 +161,9 @@ while column != '-1':
     if column!='-1':
         columnsToMatch.append(column)
 
-df1 = pd.read_csv(fileToMatch)
-df_countries = pd.read_csv('countries.csv',encoding='latin-1')
+if filePosition == '-1':
+    for i in range(len(files)):
+        ModifyFile(i,columnsToMatch)
+else:
+    ModifyFile(filePosition,columnsToMatch)
 
-
-#keep a copy to check original table
-df_copy = df1
-tempTypeList = []
-for col in columnsToMatch:
-    columnLengths = [len(i) for i in df1[col]]
-    minLength = min(columnLengths)
-    maxLength = max(columnLengths)
-    diff = maxLength-minLength
-    if diff == 0:
-        if maxLength == 2:
-            tempTypeList.append(2)
-        elif maxLength ==3:
-            tempTypeList.append(3)
-    else:
-        if df1[col].dropna().iloc[1].isalpha() :
-            tempTypeList.append(-1) #string
-        elif not (df1[col].dropna().iloc[1].isalpha()):
-            tempTypeList.append(0)  #integer
-    
-print(tempTypeList)
-columnsToMatch = [[columnsToMatch[i],tempTypeList[i]] for i in range(len(columnsToMatch))]
-print(columnsToMatch)
-'''
-
-merged_df = pd.merge(df_countries[['ISO_Code', 'Display_Name']], df_age_specific_fertility_rates[['country_name', 'country_code']], left_on='Display_Name', right_on='country_name')
-merged_df1 = pd.merge(df_countries[['ISO_Code', 'ISO']], df_age_specific_fertility_rates[['country_name', 'country_code']], left_on='ISO', right_on='country_code')
-
-#merged on DisplayName/country_name , merged1 on country_code/ISO
-merged_df = merged_df.drop(['Display_Name','country_code'],axis=1).drop_duplicates()
-merged_df1 = merged_df1.drop(['country_name','country_code'],axis=1).drop_duplicates()
-
-#14072 entries
-df_age_specific_fertility_rates_on_Name = pd.merge(df_age_specific_fertility_rates,merged_df,on = 'country_name')
-#10284 entries
-df_age_specific_fertility_rates_on_ISO = pd.merge(df_age_specific_fertility_rates,merged_df1,left_on = 'country_code',right_on='ISO').drop('ISO',axis=1)
-
-name_country_codes = df_age_specific_fertility_rates_on_Name['country_code'].unique()
-
-
-#738 entries 
-df_rows_in_ISO_missing_from_NAME = df_age_specific_fertility_rates_on_ISO[~df_age_specific_fertility_rates_on_ISO['country_code'].isin(name_country_codes)]
-
-df_age_specific_fertility_rates = pd.concat([df_rows_in_ISO_missing_from_NAME,df_age_specific_fertility_rates_on_Name])
-
-
-print(df_age_specific_fertility_rates)
-
-
-df_age_specific_fertility_rates.to_csv('modified_age_specific_fertility_rates.csv',index=False)
-
-
-
-
-############################################################################
-# #check missing countries
-merged_df2 = pd.merge(df_age_specific_fertility_rates, df_copy, on='country_name', how='right',indicator=True)
-
-missing_rows = merged_df2[merged_df2['_merge']== 'right_only']
-
-print(missing_rows['country_name'].unique())
-#print(missing_rows)
-#print(df_countries['Display_Name'].unique())
-
-fert_country_codes = df_age_specific_fertility_rates['country_code'].unique()
-countries_country_codes = df_countries['ISO'].unique()
-#print(list(set(fert_country_codes)-set(countries_country_codes)))
-############################################################################
-'''

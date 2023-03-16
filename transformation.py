@@ -22,6 +22,10 @@ df_age_specific_fertility_rates_on_Name = pd.merge(df_age_specific_fertility_rat
 #10284 entries
 df_age_specific_fertility_rates_on_ISO = pd.merge(df_age_specific_fertility_rates,merged_df1,left_on = 'country_code',right_on='ISO').drop('ISO',axis=1)
 
+print(df_age_specific_fertility_rates_on_Name)
+print("----------------------------------------")
+print(df_age_specific_fertility_rates_on_ISO)
+
 name_country_codes = df_age_specific_fertility_rates_on_Name['country_code'].unique()
 
 
