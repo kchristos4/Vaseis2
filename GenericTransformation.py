@@ -39,6 +39,7 @@ def ModifyFile(fileToMatch,columnsToMatch):
         excelFile = pd.read_excel(fileToMatch,sheet_name=None)
         for sheet_name,df in excelFile.items():
             csv_file_name = f"temp_{sheet_name}.csv"
+            df = df.applymap(lambda x: pd.to_numeric(x, errors='ignore'))
             df.to_csv(csv_file_name,index=False)
 
         #get all temp csv files
@@ -58,7 +59,9 @@ def ModifyFile(fileToMatch,columnsToMatch):
         
         writer = pd.ExcelWriter('modified\modified_'+fileToMatch, engine='xlsxwriter')
         for file in temp_csv_files:
-            df = pd.read_csv(file)
+            
+            df = pd.read_csv('modified/modified_'+file)
+            df = df.applymap(lambda x: pd.to_numeric(x, errors='ignore'))
             sheetName = file.split('.')[0][6:]
             df.to_excel(writer,sheet_name=sheetName, index=False)
             os.remove('modified/modified_'+file)
