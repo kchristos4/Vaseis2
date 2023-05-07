@@ -104,6 +104,7 @@ CREATE TABLE IF NOT EXISTS country_names_area (
     country_code VARCHAR(100),
     country_name VARCHAR(100),
     country_area INT NOT NULL,
+    ISO_Code INT,
     PRIMARY KEY (ISO_Code),
     FOREIGN KEY (ISO_Code) REFERENCES countries(ISO_Code)
 );
