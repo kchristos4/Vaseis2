@@ -17,7 +17,7 @@ for file in files:
 #get the correct csv files
 for file in files:
     if (file.split('.')[1] == "csv") or (file.split('.')[1] == "xlsx"):
-        print(file.split('.')[1])
+        #print(file.split('.')[1])
         if not (file.split('.')[0][:8] == 'modified'):
             tempFiles.append(file)
 files = tempFiles
@@ -67,11 +67,7 @@ def ModifyFile(fileToMatch,columnsToMatch):
             os.remove('modified/modified_'+file)
             os.remove(file)
         writer.save()
-        
-
-
-
-        
+    
     else:
 
         df1 = pd.read_csv(fileToMatch)
@@ -174,10 +170,10 @@ def ModifyFile(fileToMatch,columnsToMatch):
             rows_in_second_missing_from_first = second_most_effective_df[~second_most_effective_df[merged_on].isin(uniques_from_most_effective)]
 
             #our new most effective is the previous mostEffective += second most effective (ex. 14072 + 738 = 14810 rows)
-            most_effective_df = pd.concat([most_effective_df,second_most_effective_df])
+            most_effective_df = pd.concat([most_effective_df,rows_in_second_missing_from_first])
 
             #create the modified csv
-            
+            #print(most_effective_df)
             modified_File_Name = 'modified\modified_'+fileToMatch
             most_effective_df.to_csv(modified_File_Name,index=False)
 
