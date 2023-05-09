@@ -64,7 +64,8 @@ def ModifyFile(fileToMatch,columnsToMatch):
             df = df.applymap(lambda x: pd.to_numeric(x, errors='ignore'))
             sheetName = file.split('.')[0][6:]
             df.to_excel(writer,sheet_name=sheetName, index=False)
-            os.remove('modified/modified_'+file)
+            #os.remove('modified/modified_'+file)
+            os.rename('modified/modified_'+file, 'modified/modified_'+file[5:])
             os.remove(file)
         writer.save()
     
