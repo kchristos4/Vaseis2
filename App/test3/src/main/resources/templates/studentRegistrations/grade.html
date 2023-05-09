@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+	<title>Grades</title>
+</head>
+
+<body>
+ 
+	<div class="container">
+	
+		<h3>Student Grades</h3>
+		<hr>
+		
+		
+		
+		<table class="table table-bordered table-striped">
+			<thead class="thead-dark">
+				<tr>
+					<th>Student Registration id</th>
+					<th>Student Name</th>
+					<th>ID of Course Registered</th>
+					<th>Project Grade</th>
+					<th>Exam Grade</th>
+					<th>Final Grade</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<tr th:each="tempStudentRegistration : ${studentRegistrations}">
+				
+					<td th:text="${tempStudentRegistration.id}" />
+					<td th:text="${tempStudentRegistration.name}" />
+					<td th:text="${tempStudentRegistration.courseid}" />	
+					<td th:text="${tempStudentRegistration.projectgrade}" />
+					<td th:text="${tempStudentRegistration.examgrade}" />	
+					<td th:text="${tempStudentRegistration.finalgrade}" />
+								
+					
+					
+					
+					
+				</tr>
+			</tbody>		
+		</table>
+		<a th:href="@{/courses/list}">Back to Courses List</a>
+		
+	</div>
+
+</body>
+</html>

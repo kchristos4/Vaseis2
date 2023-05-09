@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+	<title>Student Registration Directory</title>
+</head>
+
+<body>
+ 
+	<div class="container">
+	
+		<h3>Student Registration Directory</h3>
+		<hr>
+		
+		
+		
+		
+		<table class="table table-bordered table-striped">
+			<thead class="thead-dark">
+				<tr>
+					<th>Student Registration id</th>
+					<th>Name</th>
+					<th>Year</th>
+					<th>Semester</th>
+					<th>Description</th>
+					<th>Project Grade</th>
+					<th>Exam Grade</th>
+					<th>ID of Course Registered</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<tr th:each="tempStudentRegistration : ${studentRegistrations}">
+				
+					<td th:text="${tempStudentRegistration.id}" />	
+					<td th:text="${tempStudentRegistration.name}" />	
+					<td th:text="${tempStudentRegistration.year}" />
+					<td th:text="${tempStudentRegistration.semester}" />
+					<td th:text="${tempStudentRegistration.description}" />
+					<td th:text="${tempStudentRegistration.projectgrade}" />
+					<td th:text="${tempStudentRegistration.examgrade}" />	
+					<td th:text="${tempStudentRegistration.courseid}" />			
+					
+					<td>
+						
+						<a th:href="@{/studentRegistrations/showFormForUpdate(studentRegistrationId=${tempStudentRegistration.id})}"
+						   class="btn btn-info btn-sm">
+							Update
+						</a>
+						
+											
+						<a th:href="@{/studentRegistrations/delete(studentRegistrationId=${tempStudentRegistration.id})}"
+						   class="btn btn-danger btn-sm"
+						   onclick="if (!(confirm('Are you sure you want to delete this student registration?'))) return false">
+							Delete
+						</a>
+						
+						
+						
+					</td>
+					
+					
+				</tr>
+			</tbody>
+					
+		</table>
+		<hr>
+		<a th:href="@{/courses/list}">Back to Courses List</a>
+	</div>
+
+</body>
+</html>

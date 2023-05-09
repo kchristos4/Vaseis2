@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+	<title>Statistics</title>
+</head>
+
+<body>
+ 
+	<div class="container">
+	
+		<h3>Statistics</h3>
+		<hr>
+		
+		
+		<table class="table table-bordered table-striped">
+			<thead class="thead-dark">
+				<tr>
+					
+					<th>Min</th>
+					<th>Max</th>
+					<th>Mean</th>
+					<th>Standard Deviation</th>
+					<th>Variance</th>
+					<th>97th percentile</th>
+					<th>Skewness</th>
+					<th>Kurtosis</th>
+					<th>Median</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+								
+				<tr th:each="tempStat : ${Statistics} ">
+				
+					 
+					<td th:text="${tempStat.get(0)}" />	
+					<td th:text="${tempStat.get(1)}" />
+					<td th:text="${tempStat.get(2)}" />
+					<td th:text="${tempStat.get(3)}" />
+					<td th:text="${tempStat.get(4)}" />
+					<td th:text="${tempStat.get(5)}" />
+					<td th:text="${tempStat.get(6)}" />
+					<td th:text="${tempStat.get(7)}" />
+					<td th:text="${tempStat.get(8)}" />
+					
+					
+				</tr>
+			</tbody>		
+		</table>
+		<a th:href="@{/courses/list}">Back to Courses List</a>
+		
+	</div>
+
+</body>
+</html>
