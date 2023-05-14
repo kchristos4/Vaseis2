@@ -11,7 +11,7 @@ drop table if exists midyear_population_5yr_age_sex;
 drop table if exists midyear_population_age_sex;
 drop table if exists mortality_life_expectancy;
 
-drop table if exists Domestic_credits;
+drop table if exists domestic_credits;
 drop table if exists Estimated_GNI_female;
 drop table if exists Estimated_GNI_male;
 drop table if exists GDP_per_capita;
