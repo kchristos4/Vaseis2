@@ -1,4 +1,4 @@
-package incometaxcalculator.gui;
+package mye030.DBMS_data_visualization.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -9,10 +9,13 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -26,19 +29,17 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
-import incometaxcalculator.data.management.TaxpayerManager;
-import incometaxcalculator.exceptions.WrongFileEndingException;
-import incometaxcalculator.exceptions.WrongFileFormatException;
-import incometaxcalculator.exceptions.WrongReceiptDateException;
-import incometaxcalculator.exceptions.WrongReceiptKindException;
-import incometaxcalculator.exceptions.WrongTaxpayerStatusException;
+import mye030.DBMS_data_visualization.controller.DBcontroller;
+import mye030.DBMS_data_visualization.services.countriesService;
+
 
 public class GraphicalInterface extends JFrame {
 
   private JPanel contentPane;
-  private TaxpayerManager taxpayerManager = new TaxpayerManager();
-  private String taxpayersTRN = new String();
-  private JTextField txtTaxRegistrationNumber;
+  
+  private DBcontroller Manager = new DBcontroller(new countriesService());
+//  private String taxpayersTRN = new String();
+//  private JTextField txtTaxRegistrationNumber;
 
   public static void main(String[] args) {
     EventQueue.invokeLater(new Runnable() {
@@ -68,8 +69,83 @@ public class GraphicalInterface extends JFrame {
         | UnsupportedLookAndFeelException e2) {
       e2.printStackTrace();
     }
+    
+    
+    
+    JComboBox<String> countriesDropDownMenu = new JComboBox<>();
+    List<String> countriesList = Manager.getCountries();
+    for (String c : countriesList) {
+    	countriesDropDownMenu.addItem(c);
+    }
+    JButton buttonAddCountry = new JButton("Add country");
+    List<String> selectedCountries = new ArrayList<>();
+    buttonAddCountry.addActionListener(e -> {
+        String selectedCountry = (String) countriesDropDownMenu.getSelectedItem();
+        selectedCountries.add(selectedCountry);
+    });
+    
+    
+    List<String> indicesList = Manager.getIndices();
+    JComboBox<String> XIndicesDropDownMenu = new JComboBox<>();
+    for (String i : indicesList) {
+    	XIndicesDropDownMenu.addItem(i);
+    }
+    
+    JComboBox<String> YIndicesDropDownMenu = new JComboBox<>();
+    for (String i : indicesList) {
+    	YIndicesDropDownMenu.addItem(i);
+    }
+    
+    
+    
+    JTextField LowerRangeField = new JTextField();
+    JTextField UpperRangeField = new JTextField();
 
-    JTextPane textPane = new JTextPane();
+    
+    
+    
+    
+    
+    
+    JButton SubmitButton = new JButton("Submit");
+    SubmitButton.addActionListener(e -> {
+        String Lo = LowerRangeField.getText();
+        String Up = UpperRangeField.getText();
+        String Xindex = XIndicesDropDownMenu.getSelectedItem().toString();
+        String Yindex = YIndicesDropDownMenu.getSelectedItem().toString();
+        Manager.createGraphs(selectedCountries,Xindex,Yindex,Lo,Up);
+    });
+    
+    countriesDropDownMenu.setBounds(147, 0, 139, 23);
+    buttonAddCountry.setBounds(147, 25, 139, 23);
+    XIndicesDropDownMenu.setBounds(147, 50, 139, 23);
+    YIndicesDropDownMenu.setBounds(147, 75, 139, 23);
+    LowerRangeField.setBounds(147, 125, 139, 23);
+    UpperRangeField.setBounds(147, 150, 139, 23);
+    SubmitButton.setBounds(147, 100, 139, 23);
+    contentPane.add(countriesDropDownMenu);
+    contentPane.add(buttonAddCountry);
+    contentPane.add(XIndicesDropDownMenu);
+    contentPane.add(YIndicesDropDownMenu);
+    contentPane.add(SubmitButton);
+    contentPane.add(UpperRangeField);
+    contentPane.add(LowerRangeField);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /*JTextPane textPane = new JTextPane();
     textPane.setEditable(false);
     textPane.setBackground(new Color(153, 204, 204));
     textPane.setBounds(0, 21, 433, 441);
@@ -102,7 +178,7 @@ public class GraphicalInterface extends JFrame {
     txtBox.doClick();
     boxPanel.add(txtBox, BorderLayout.WEST);
     boxPanel.add(xmlBox, BorderLayout.EAST);
-
+*/
     DefaultListModel<String> taxRegisterNumberModel = new DefaultListModel<String>();
 
     JList<String> taxRegisterNumberList = new JList<String>(taxRegisterNumberModel);
@@ -116,7 +192,7 @@ public class GraphicalInterface extends JFrame {
     taxRegisterNumberListScrollPane.setLocation(70, 100);
     contentPane.add(taxRegisterNumberListScrollPane);
 
-    JButton btnLoadTaxpayer = new JButton("Load Taxpayer");
+    /*JButton btnLoadTaxpayer = new JButton("Load Taxpayer");
     btnLoadTaxpayer.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         int answer = JOptionPane.showConfirmDialog(null, fileLoaderPanel, "",
@@ -168,8 +244,8 @@ public class GraphicalInterface extends JFrame {
 
         }
       }
-    });
-    btnLoadTaxpayer.setBounds(0, 0, 146, 23);
+    });*/
+    /*btnLoadTaxpayer.setBounds(0, 0, 146, 23);
     contentPane.add(btnLoadTaxpayer);
 
     JButton btnSelectTaxpayer = new JButton("Select Taxpayer");
@@ -227,16 +303,16 @@ public class GraphicalInterface extends JFrame {
       }
     });
     btnDeleteTaxpayer.setBounds(287, 0, 146, 23);
-    contentPane.add(btnDeleteTaxpayer);
+    contentPane.add(btnDeleteTaxpayer);*/
 
-    txtTaxRegistrationNumber = new JTextField();
+    /*txtTaxRegistrationNumber = new JTextField();
     txtTaxRegistrationNumber.setEditable(false);
     txtTaxRegistrationNumber.setBackground(new Color(153, 204, 204));
     txtTaxRegistrationNumber.setFont(new Font("Tahoma", Font.BOLD, 14));
     txtTaxRegistrationNumber.setText("Tax Registration Number:");
     txtTaxRegistrationNumber.setBounds(70, 80, 300, 20);
     contentPane.add(txtTaxRegistrationNumber);
-    txtTaxRegistrationNumber.setColumns(10);
+    txtTaxRegistrationNumber.setColumns(10);*/
 
   }
 }

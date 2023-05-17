@@ -1,4 +1,4 @@
-package incometaxcalculator.gui;
+/*package mye030.DBMS_data_visualization.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -310,4 +310,4 @@ public class TaxpayerData extends JFrame {
     txtpnReceipts.setBounds(10, 170, 80, 20);
     contentPane.add(txtpnReceipts);
   }
-}
+}*/

@@ -1,4 +1,4 @@
-/*package mye030.DBMS_data_visualization.controller;
+package mye030.DBMS_data_visualization.controller;
 
 import java.util.*;
 
@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import mye030.DBMS_data_visualization.entities.Course;
-import mye030.DBMS_data_visualization.entities.StudentRegistration;
-import mye030.DBMS_data_visualization.services.*;
+import mye030.DBMS_data_visualization.services.countriesService;
+import mye030.DBMS_data_visualization.entities.countries;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,21 +23,38 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 @Controller	
-@RequestMapping("/courses")
-@SessionAttributes("courses")
-public class CourseController{
+public class DBcontroller{
 	
 	@Autowired
-	private CourseService courseService;
+	private countriesService cService;
 	
-	@Autowired
-	private StudentRegistrationService studentRegistrationService;
+	//@Autowired
+	//private StudentRegistrationService studentRegistrationService;
 		
-	public CourseController(CourseService theCourseService) {
-		courseService = theCourseService;
+	public DBcontroller(countriesService thisCService) {
+		cService = thisCService;
 	}
 	
-	@RequestMapping("/list")
+	public List<String> getCountries(){
+		List<String> countriesList = new ArrayList<>();
+		List<countries> countries = cService.findAll();
+		for (countries c : countries) {
+			countriesList.add(c.getDisplay_Name());
+		}
+		
+		return countriesList;
+	}
+	
+	public List<String> getIndices(){
+		List<String> indicesList = new ArrayList<>();
+		return indicesList;
+	}
+	
+	
+	public void createGraphs(List<String> selectedCountries,String Xindex,String Yindex,String Lo,String Up){
+	}
+	/*
+	
 	public String listCourses(Model theModel) {
 		
 		//create a new list containing all courses
@@ -51,7 +67,6 @@ public class CourseController{
 	
 	
 	
-	@RequestMapping("/showFormForAdd")
 	public String showFormForAdd(Model theModel) {
 		
 		// create new course
@@ -62,7 +77,6 @@ public class CourseController{
 		return "courses/course-form";
 	}
 	
-	@RequestMapping("/showFormForUpdate")
 	public String showFormForUpdate(@RequestParam("courseId") int theId,
 									Model theModel) {
 		
@@ -79,7 +93,6 @@ public class CourseController{
 		// send over to our form
 		return "courses/course-form";			
 	}
-	@RequestMapping("/save")
 	public String saveCourse(@ModelAttribute("course") Course theCourse) {
 		
 		// save the course
@@ -88,7 +101,6 @@ public class CourseController{
 		// use a redirect to prevent duplicate submissions
 		return "redirect:/courses/list";
 	}
-	@RequestMapping("/delete")
 	public String delete(@RequestParam("courseId") int theId) {
 		
 		List<StudentRegistration> studRegs = studentRegistrationService.findAllByCourseid(theId);
@@ -104,5 +116,5 @@ public class CourseController{
 		// redirect to /courses/list
 		return "redirect:/courses/list";
 		
-	}
-}*/
+	}*/
+}

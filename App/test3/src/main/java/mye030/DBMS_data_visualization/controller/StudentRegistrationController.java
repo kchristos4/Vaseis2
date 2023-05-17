@@ -1,4 +1,4 @@
-package mye030.DBMS_data_visualization.controller;
+/*package mye030.DBMS_data_visualization.controller;
 
 import java.text.*;
 import java.util.*;
@@ -216,7 +216,6 @@ public class StudentRegistrationController{
 		/*GradeType.add("Exam Stats");
 		GradeType.add("Project Stats");
 		GradeType.add("Final Stats");
-		*/
 		theModel.addAttribute("studentRegistrations", theStudentRegistrations);
 		theModel.addAttribute("Statistics",Statistics);
 		//theModel.addAttribute("GradeType",GradeType);
@@ -259,4 +258,4 @@ public class StudentRegistrationController{
 		
 	}
 
-}
+}*/

@@ -1,4 +1,4 @@
-package incometaxcalculator.gui;
+/*package mye030.DBMS_data_visualization.gui;
 
 import java.awt.BorderLayout;
 
@@ -83,4 +83,4 @@ class ChartDisplay {
     barChartDataset.addValue(totalTax, "Tax", "Total");
     return barChartDataset;
   }
-}
+}*/

@@ -23,7 +23,7 @@ public class Test3Application implements CommandLineRunner {
 	}
 	@Override
 	public void run(String... args) throws Exception {
-		countriesDAO.findById(450);
+		//countriesDAO.findById(450);
 	}
 
 }
