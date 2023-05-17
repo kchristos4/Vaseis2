@@ -29,32 +29,59 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
+import mye030.DBMS_data_visualization.DAO.countriesDAO;
 import mye030.DBMS_data_visualization.controller.DBcontroller;
+import mye030.DBMS_data_visualization.services.countriesImpl;
 import mye030.DBMS_data_visualization.services.countriesService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 
-public class GraphicalInterface extends JFrame {
+import mye030.DBMS_data_visualization.*;
+import mye030.DBMS_data_visualization.DAO.*;
+import mye030.DBMS_data_visualization.entities.countries;
+import mye030.DBMS_data_visualization.gui.*;
+
+
+@SpringBootApplication
+public class GraphicalInterface extends JFrame implements CommandLineRunner{
 
   private JPanel contentPane;
-  
-  private DBcontroller Manager = new DBcontroller(new countriesService());
+  @Autowired
+  private countriesDAO cDAO;
+  //private countriesImpl CService = new countriesImpl(countriesRepository);
+  private DBcontroller Manager = new DBcontroller();
 //  private String taxpayersTRN = new String();
 //  private JTextField txtTaxRegistrationNumber;
 
   public static void main(String[] args) {
-    EventQueue.invokeLater(new Runnable() {
-      public void run() {
-        try {
-          GraphicalInterface frame = new GraphicalInterface();
-          frame.setVisible(true);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    });
+	ConfigurableApplicationContext ctx = new SpringApplicationBuilder(GraphicalInterface.class).headless(false).run(args);
+	SpringApplication.run(GraphicalInterface.class, args);  
+    
   }
 
+  @Override
+  public void run(String... args) throws Exception {
+	  EventQueue.invokeLater(new Runnable() {
+	      public void run() {
+	        try {
+	          GraphicalInterface frame = new GraphicalInterface();
+	          frame.setVisible(true);
+	        } catch (Exception e) {
+	          e.printStackTrace();
+	        }
+	      }
+	    });
+  }
+  
   public GraphicalInterface() {
+	  //System.out.println(cDAO.findAll().get(100).getOfficial_Name());
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setBounds(100, 100, 450, 500);
     contentPane = new JPanel();
@@ -315,4 +342,6 @@ public class GraphicalInterface extends JFrame {
     txtTaxRegistrationNumber.setColumns(10);*/
 
   }
+
+
 }

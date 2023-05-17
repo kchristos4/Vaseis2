@@ -1,5 +1,6 @@
 package mye030.DBMS_data_visualization.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,12 @@ public class countriesImpl implements countriesService{
 	@Autowired
 	private countriesDAO countriesRepository;
 	
+	@Autowired
 	public countriesImpl() {
 		
 	}
 	
-	@Autowired
+	
 	public countriesImpl(countriesDAO thecountriesRepository) {
 		countriesRepository = thecountriesRepository;
 	}
@@ -27,7 +29,9 @@ public class countriesImpl implements countriesService{
 	@Override
 	@Transactional
 	public List<countries> findAll() {
-		return countriesRepository.findAll();
+		//List<countries> test = countriesRepository.findAll();
+		List<countries> test1 = new ArrayList<>();
+		return test1;
 	}
 	
 	@Override

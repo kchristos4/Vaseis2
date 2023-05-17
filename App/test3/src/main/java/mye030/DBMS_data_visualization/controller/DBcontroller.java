@@ -7,19 +7,13 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
+
+import mye030.DBMS_data_visualization.services.countriesImpl;
 import mye030.DBMS_data_visualization.services.countriesService;
 import mye030.DBMS_data_visualization.entities.countries;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 
 @Controller	
@@ -31,13 +25,16 @@ public class DBcontroller{
 	//@Autowired
 	//private StudentRegistrationService studentRegistrationService;
 		
-	public DBcontroller(countriesService thisCService) {
+	public DBcontroller(countriesImpl thisCService) {
 		cService = thisCService;
+	}
+	public DBcontroller() {
+		//cService = new countriesImpl();
 	}
 	
 	public List<String> getCountries(){
 		List<String> countriesList = new ArrayList<>();
-		List<countries> countries = cService.findAll();
+		List<countries> countries = new ArrayList<>();//cService.findAll();
 		for (countries c : countries) {
 			countriesList.add(c.getDisplay_Name());
 		}
