@@ -9,9 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 
-import mye030.DBMS_data_visualization.services.countriesImpl;
-import mye030.DBMS_data_visualization.services.countriesService;
-import mye030.DBMS_data_visualization.entities.countries;
+import mye030.DBMS_data_visualization.services.CountryImpl;
+import mye030.DBMS_data_visualization.services.CountryService;
+import mye030.DBMS_data_visualization.entities.Country;
 
 import org.slf4j.LoggerFactory;
 
@@ -20,22 +20,23 @@ import org.slf4j.LoggerFactory;
 public class DBcontroller{
 	
 	@Autowired
-	private countriesService cService;
+	private CountryService cService;
 	
 	//@Autowired
 	//private StudentRegistrationService studentRegistrationService;
-		
-	public DBcontroller(countriesImpl thisCService) {
+	@Autowired
+	public DBcontroller(CountryImpl thisCService) {
 		cService = thisCService;
 	}
+	
 	public DBcontroller() {
 		//cService = new countriesImpl();
 	}
 	
 	public List<String> getCountries(){
 		List<String> countriesList = new ArrayList<>();
-		List<countries> countries = new ArrayList<>();//cService.findAll();
-		for (countries c : countries) {
+		List<Country> countries = cService.findAll();//cService.findAll();
+		for (Country c : countries) {
 			countriesList.add(c.getDisplay_Name());
 		}
 		
@@ -44,6 +45,40 @@ public class DBcontroller{
 	
 	public List<String> getIndices(){
 		List<String> indicesList = new ArrayList<>();
+		indicesList.add("fertility_rate_by_age");
+		indicesList.add("total_fertility_rate");
+		indicesList.add("gross_reproduction_rate");
+		indicesList.add("sex_ratio_at_birth");
+		indicesList.add("crude_birth_rate");
+		indicesList.add("crude_death_rate");
+		indicesList.add("net_migration");
+		indicesList.add("rate_natural_increase");
+		indicesList.add("growth_rate");
+		indicesList.add("Domestic credits");
+		indicesList.add("Estimated GNI female");
+		indicesList.add("Estimated GNI male");
+		indicesList.add("GDP per capita");
+		indicesList.add("GDP total");
+		indicesList.add("GNI per capita");
+		indicesList.add("Gross fixed capital formation");
+		indicesList.add("Income Index");
+		indicesList.add("Labour share of GDP");
+		indicesList.add("midyear_population");
+		indicesList.add("midyear_population_male");
+		indicesList.add("midyear_population_female");
+		indicesList.add("population by age");
+		indicesList.add("infant_mortality");
+		indicesList.add("infant_mortality_male");
+		indicesList.add("infant_mortality_female");
+		indicesList.add("life_expectancy");
+		indicesList.add("life_expectancy_male");
+		indicesList.add("life_expectancy_female");
+		indicesList.add("mortality_rate_under5");
+		indicesList.add("mortality_rate_under5_male");
+		indicesList.add("mortality_rate_under5_female");
+		indicesList.add("mortality_rate_1to4");
+		indicesList.add("mortality_rate_1to4_male");
+		indicesList.add("mortality_rate_1to4_female");
 		return indicesList;
 	}
 	
