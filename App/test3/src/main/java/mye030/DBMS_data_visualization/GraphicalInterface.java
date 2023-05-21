@@ -150,7 +150,9 @@ public class GraphicalInterface extends JFrame implements CommandLineRunner{
     JTextField LowerRangeField = new JTextField();
     JTextField UpperRangeField = new JTextField();
 
-    
+    JCheckBox scatterCheckBox = new JCheckBox("Scatter Plot");
+    JCheckBox barCheckBox = new JCheckBox("Barchart");
+    JCheckBox lineCheckBox = new JCheckBox("Trendline");
     
     JButton SubmitButton = new JButton("Submit");
     SubmitButton.addActionListener(e -> {
@@ -160,8 +162,18 @@ public class GraphicalInterface extends JFrame implements CommandLineRunner{
         String Yindex = YIndicesDropDownMenu.getSelectedItem().toString();
         System.out.println(Xindex + " " + Yindex);
         Manager.createGraphs(selectedCountries,Xindex,Yindex,Lo,Up);
-        
+        if(scatterCheckBox.isSelected()) {
+        	ChartDisplay.createScatterPlot();
+        }
+        if(barCheckBox.isSelected()) {
+        	ChartDisplay.createBarChart();
+        }
+        if(lineCheckBox.isSelected()) {
+        	ChartDisplay.createLineChart();
+        }
     });
+    
+    
     
     countriesDropDownMenu.setBounds(147, 0, 139, 23);
     buttonAddCountry.setBounds(147, 25, 139, 23);
@@ -171,6 +183,9 @@ public class GraphicalInterface extends JFrame implements CommandLineRunner{
     UpperRangeField.setBounds(147, 150, 139, 23);
     SubmitButton.setBounds(147, 100, 139, 23);
     scrollPane.setBounds(147, 180, 139, 100);
+    scatterCheckBox.setBounds(147, 300, 100, 25);
+    barCheckBox.setBounds(147, 325, 100, 25);
+    lineCheckBox.setBounds(147, 350, 100, 25);
     contentPane.add(countriesDropDownMenu);
     contentPane.add(buttonAddCountry);
     contentPane.add(XIndicesDropDownMenu);
@@ -179,6 +194,9 @@ public class GraphicalInterface extends JFrame implements CommandLineRunner{
     contentPane.add(UpperRangeField);
     contentPane.add(LowerRangeField);
     contentPane.add(scrollPane);
+    contentPane.add(scatterCheckBox);
+    contentPane.add(barCheckBox);
+    contentPane.add(lineCheckBox);
     
     
     
@@ -227,7 +245,7 @@ public class GraphicalInterface extends JFrame implements CommandLineRunner{
     txtBox.doClick();
     boxPanel.add(txtBox, BorderLayout.WEST);
     boxPanel.add(xmlBox, BorderLayout.EAST);
-*/
+
     DefaultListModel<String> taxRegisterNumberModel = new DefaultListModel<String>();
 
     JList<String> taxRegisterNumberList = new JList<String>(taxRegisterNumberModel);
@@ -241,7 +259,7 @@ public class GraphicalInterface extends JFrame implements CommandLineRunner{
     taxRegisterNumberListScrollPane.setLocation(70, 100);
     contentPane.add(taxRegisterNumberListScrollPane);
 
-    /*JButton btnLoadTaxpayer = new JButton("Load Taxpayer");
+    JButton btnLoadTaxpayer = new JButton("Load Taxpayer");
     btnLoadTaxpayer.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         int answer = JOptionPane.showConfirmDialog(null, fileLoaderPanel, "",
