@@ -1,5 +1,6 @@
 package mye030.DBMS_data_visualization.controller;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 
@@ -66,6 +67,9 @@ public class DBcontroller{
 		indicesList.add("midyear_population");
 		indicesList.add("midyear_population_male");
 		indicesList.add("midyear_population_female");
+		indicesList.add("midyear_population_5yr");
+		indicesList.add("midyear_population_male_5yr");
+		indicesList.add("midyear_population_female_5yr");
 		indicesList.add("population by age");
 		indicesList.add("infant_mortality");
 		indicesList.add("infant_mortality_male");
@@ -83,8 +87,55 @@ public class DBcontroller{
 	}
 	
 	
-	public void createGraphs(List<String> selectedCountries,String Xindex,String Yindex,String Lo,String Up){
-	}
+	public void createGraphs(List<String> selectedCountries, String Xindex, String Yindex, String Lo, String Up){
+	
+	HashMap<String, String> fileMatch = new HashMap<>();
+	fileMatch.put("fertility_rate_by_age", "AgeSpecificFertilityRate");
+	fileMatch.put("total_fertility_rate", "AgeSpecificFertilityRate");
+	fileMatch.put("gross_reproduction_rate", "AgeSpecificFertilityRate");
+	fileMatch.put("sex_ratio_at_birth", "AgeSpecificFertilityRate");
+	fileMatch.put("crude_birth_rate", "BirthDeathGrowthRate");
+	fileMatch.put("crude_death_rate", "BirthDeathGrowthRate");
+	fileMatch.put("net_migration", "BirthDeathGrowthRate");
+	fileMatch.put("rate_natural_increase", "BirthDeathGrowthRate");
+	fileMatch.put("growth_rate", "BirthDeathGrowthRate");
+	fileMatch.put("Domestic credits", "DomesticCredit");
+	fileMatch.put("Estimated GNI female", "EstimatedGniFemale");
+	fileMatch.put("Estimated GNI male", "EstimatedGniMale");
+	fileMatch.put("GDP per capita", "GdpPerCapita");
+	fileMatch.put("GDP total", "GdpTotal");
+	fileMatch.put("GNI per capita", "GniPerCapita");
+	fileMatch.put("Gross fixed capital formation", "GrossFixedCapitalFormation");
+	fileMatch.put("Income Index", "IncomeIndex");
+	fileMatch.put("Labour share of GDP", "LabourShareOfGdp");
+	fileMatch.put("midyear_population", "MidyearPopulation");
+	fileMatch.put("midyear_population_male", "MidyearPopulation");
+	fileMatch.put("midyear_population_female", "MidyearPopulation");
+	fileMatch.put("midyear_population_5yr", "MidyearPopulation5yrAgeSex");
+	fileMatch.put("midyear_population_male_5yr", "MidyearPopulation5yrAgeSex");
+	fileMatch.put("midyear_population_female_5yr", "MidyearPopulation5yrAgeSex");
+	fileMatch.put("population by age", "MidyearPopulationAgeSex");
+	fileMatch.put("infant_mortality", "MortalityLifeExpectancy");
+	fileMatch.put("infant_mortality_male", "MortalityLifeExpectancy");
+	fileMatch.put("infant_mortality_female", "MortalityLifeExpectancy");
+	fileMatch.put("life_expectancy", "MortalityLifeExpectancy");
+	fileMatch.put("life_expectancy_male", "MortalityLifeExpectancy");
+	fileMatch.put("life_expectancy_female", "MortalityLifeExpectancy");
+	fileMatch.put("mortality_rate_under5", "MortalityLifeExpectancy");
+	fileMatch.put("mortality_rate_under5_male", "MortalityLifeExpectancy");
+	fileMatch.put("mortality_rate_under5_female", "MortalityLifeExpectancy");
+	fileMatch.put("mortality_rate_1to4", "MortalityLifeExpectancy");
+	fileMatch.put("mortality_rate_1to4_male", "MortalityLifeExpectancy");
+	fileMatch.put("mortality_rate_1to4_female", "MortalityLifeExpectancy");
+	
+	String entityX = fileMatch.get(Xindex);
+	String entityY = fileMatch.get(Yindex);
+	Class<?> clazz = cService.getClass();
+	Method method = clazz.getMethod("findAll"+entityX);
+	Class<?> classo = method.getReturnType();
+	Object lista = new ArrayList<>();
+	lista = method.invoke(cService);
+	
 	/*
 	
 	public String listCourses(Model theModel) {
@@ -149,4 +200,5 @@ public class DBcontroller{
 		return "redirect:/courses/list";
 		
 	}*/
+	}
 }
