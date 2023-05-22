@@ -12,7 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
 import mye030.DBMS_data_visualization.*;
 import mye030.DBMS_data_visualization.DAO.*;
 import mye030.DBMS_data_visualization.entities.countries;
-import mye030.DBMS_data_visualization.gui.*;
 
 //@SpringBootApplication
 public class Test3Application implements CommandLineRunner {

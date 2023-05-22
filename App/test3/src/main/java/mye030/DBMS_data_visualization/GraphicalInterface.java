@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import mye030.DBMS_data_visualization.controller.DBcontroller;
-import mye030.DBMS_data_visualization.dao.CountryDAO;
+import mye030.DBMS_data_visualization.DAO.CountryDAO;
 import mye030.DBMS_data_visualization.services.CountryImpl;
 import mye030.DBMS_data_visualization.services.CountryService;
 
@@ -161,7 +162,13 @@ public class GraphicalInterface extends JFrame implements CommandLineRunner{
         String Xindex = XIndicesDropDownMenu.getSelectedItem().toString();
         String Yindex = YIndicesDropDownMenu.getSelectedItem().toString();
         System.out.println(Xindex + " " + Yindex);
-        Manager.createGraphs(selectedCountries,Xindex,Yindex,Lo,Up);
+        try {
+			Manager.createGraphs(selectedCountries,Xindex,Yindex,Lo,Up);
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         if(scatterCheckBox.isSelected()) {
         	ChartDisplay.createScatterPlot();
         }

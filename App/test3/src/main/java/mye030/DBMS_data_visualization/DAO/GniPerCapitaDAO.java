@@ -1,4 +1,4 @@
-package mye030.DBMS_data_visualization.dao;
+package mye030.DBMS_data_visualization.DAO;
 
 import java.util.List;
 
