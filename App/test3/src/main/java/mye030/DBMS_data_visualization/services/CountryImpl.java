@@ -24,6 +24,8 @@ import mye030.DBMS_data_visualization.entities.IncomeIndex;
 import mye030.DBMS_data_visualization.entities.LabourShareOfGdp;
 import mye030.DBMS_data_visualization.entities.MidyearPopulation;
 import mye030.DBMS_data_visualization.entities.MidyearPopulation5yrAgeSex;
+import mye030.DBMS_data_visualization.entities.MidyearPopulationAgeCountryCode;
+import mye030.DBMS_data_visualization.entities.MidyearPopulationAgeCountryCodePK;
 import mye030.DBMS_data_visualization.entities.MidyearPopulationAgeSex;
 import mye030.DBMS_data_visualization.entities.MortalityLifeExpectancy;
 
@@ -31,6 +33,40 @@ import mye030.DBMS_data_visualization.entities.MortalityLifeExpectancy;
 public class CountryImpl implements CountryService{
 	
 	
+	public CountryImpl(CountryDAO countryRepository, AgeSpecificFertilityRateDAO ageSpecificFertilityRateRepository,
+			BirthDeathGrowthRateDAO birthDeathGrowthRateRepository, CountryNamesAreaDAO countryNamesAreaRepository,
+			DomesticCreditDAO domesticCreditRepository, EstimatedGniFemaleDAO estimatedGniFemaleRepository,
+			EstimatedGniMaleDAO estimatedGniMaleRepository, GdpPerCapitaDAO gdpPerCapitaRepository,
+			GdpTotalDAO gdpTotalRepository, GniPerCapitaDAO gniPerCapitaRepository,
+			GrossFixedCapitalFormationDAO grossFixedCapitalFormationRepository, IncomeIndexDAO incomeIndexRepository,
+			LabourShareOfGdpDAO labourShareOfGdpRepository,
+			MidyearPopulation5yrAgeSexDAO midyearPopulation5yrAgeSexRepository,
+			MidyearPopulationAgeCountryCodeDAO midyearPopulationAgeCountryCodeRepository,
+			MidyearPopulationAgeSexDAO midyearPopulationAgeSexRepository,
+			MidyearPopulationDAO midyearPopulationRepository,
+			MortalityLifeExpectancyDAO mortalityLifeExpectancyRepository) {
+
+		CountryRepository = countryRepository;
+		AgeSpecificFertilityRateRepository = ageSpecificFertilityRateRepository;
+		BirthDeathGrowthRateRepository = birthDeathGrowthRateRepository;
+		CountryNamesAreaRepository = countryNamesAreaRepository;
+		DomesticCreditRepository = domesticCreditRepository;
+		EstimatedGniFemaleRepository = estimatedGniFemaleRepository;
+		EstimatedGniMaleRepository = estimatedGniMaleRepository;
+		GdpPerCapitaRepository = gdpPerCapitaRepository;
+		GdpTotalRepository = gdpTotalRepository;
+		GniPerCapitaRepository = gniPerCapitaRepository;
+		GrossFixedCapitalFormationRepository = grossFixedCapitalFormationRepository;
+		IncomeIndexRepository = incomeIndexRepository;
+		LabourShareOfGdpRepository = labourShareOfGdpRepository;
+		MidyearPopulation5yrAgeSexRepository = midyearPopulation5yrAgeSexRepository;
+		MidyearPopulationAgeCountryCodeRepository = midyearPopulationAgeCountryCodeRepository;
+		MidyearPopulationAgeSexRepository = midyearPopulationAgeSexRepository;
+		MidyearPopulationRepository = midyearPopulationRepository;
+		MortalityLifeExpectancyRepository = mortalityLifeExpectancyRepository;
+	}
+
+
 	private CountryDAO CountryRepository;
 	private AgeSpecificFertilityRateDAO AgeSpecificFertilityRateRepository;
 	private BirthDeathGrowthRateDAO BirthDeathGrowthRateRepository;
@@ -45,6 +81,7 @@ public class CountryImpl implements CountryService{
 	private IncomeIndexDAO IncomeIndexRepository;
 	private LabourShareOfGdpDAO LabourShareOfGdpRepository;
 	private MidyearPopulation5yrAgeSexDAO MidyearPopulation5yrAgeSexRepository;
+	private MidyearPopulationAgeCountryCodeDAO MidyearPopulationAgeCountryCodeRepository;
 	private MidyearPopulationAgeSexDAO MidyearPopulationAgeSexRepository;
 	private MidyearPopulationDAO MidyearPopulationRepository;
 	private MortalityLifeExpectancyDAO MortalityLifeExpectancyRepository;
@@ -56,9 +93,7 @@ public class CountryImpl implements CountryService{
 	}
 	
 	
-	public CountryImpl(CountryDAO theCountryRepository) {
-		this.CountryRepository = theCountryRepository;
-	}
+
 	
 
 
@@ -178,5 +213,21 @@ public class CountryImpl implements CountryService{
 	@Transactional
 	public List<MortalityLifeExpectancy> findAllMortalityLifeExpectancy() {
 		return MortalityLifeExpectancyRepository.findAll();
+	}
+
+
+	@Override
+	public List<MidyearPopulationAgeCountryCode> findAllMidyearPopulationAgeCountryCode() {
+		return MidyearPopulationAgeCountryCodeRepository.findAll();
+	}
+
+
+
+
+
+
+	@Override
+	public List<MidyearPopulationAgeCountryCode> findAllByIsoCodeMidyearPopulationAgeCountryCode(int isoCode) {
+		return MidyearPopulationAgeCountryCodeRepository.findAllById_ISOCode(isoCode);
 	}
 }

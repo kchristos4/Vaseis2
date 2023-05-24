@@ -23,7 +23,13 @@ public interface CountryService{
 	public List<IncomeIndex> findAllIncomeIndex();
 	public List<LabourShareOfGdp> findAllLabourShareOfGdp();
 	public List<MidyearPopulation5yrAgeSex> findAllMidyearPopulation5yrAgeSex();
+	public List<MidyearPopulationAgeCountryCode> findAllMidyearPopulationAgeCountryCode();
 	public List<MidyearPopulationAgeSex> findAllMidyearPopulationAgeSex();
 	public List<MidyearPopulation> findAllMidyearPopulation();
 	public List<MortalityLifeExpectancy> findAllMortalityLifeExpectancy();
+	
+	
+	
+	
+	public List<MidyearPopulationAgeCountryCode> findAllByIsoCodeMidyearPopulationAgeCountryCode(int isoCode);
 }

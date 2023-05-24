@@ -11,12 +11,10 @@ import org.springframework.context.annotation.ComponentScan;
 
 import mye030.DBMS_data_visualization.*;
 import mye030.DBMS_data_visualization.DAO.*;
-import mye030.DBMS_data_visualization.entities.countries;
 
 //@SpringBootApplication
 public class Test3Application implements CommandLineRunner {
-	@Autowired
-	private countriesDAO cDAO;
+	
 	
 	public static void main(String[] args) {
 		
@@ -31,7 +29,6 @@ public class Test3Application implements CommandLineRunner {
 		System.out.println("############################################");
 		System.out.println("app started");
 		System.out.println("############################################");
-		System.out.println(cDAO.findAll().get(100).getOfficial_Name());
 		GraphicalInterface.main(args);
 
 	}

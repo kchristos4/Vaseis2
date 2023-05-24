@@ -10,6 +10,7 @@ drop table if exists midyear_population;
 drop table if exists midyear_population_5yr_age_sex;
 drop table if exists midyear_population_age_sex;
 drop table if exists mortality_life_expectancy;
+drop table if exists midyear_population_age_country_code;
 
 drop table if exists domestic_credits;
 drop table if exists Estimated_GNI_female;
@@ -466,6 +467,121 @@ CREATE TABLE IF NOT EXISTS Labour_share_of_GDP (
     FOREIGN KEY (ISO_Code) REFERENCES countries(ISO_Code)
 );
 
+CREATE TABLE IF NOT EXISTS midyear_population_age_country_code (
+    country_code VARCHAR(100),
+    country_name VARCHAR(100),
+    year INT NOT NULL,
+    sex VARCHAR(100),
+    max_age VARCHAR(100),
+    population_age_0 VARCHAR(100),
+    population_age_1 VARCHAR(100),
+    population_age_2 VARCHAR(100),
+    population_age_3 VARCHAR(100),
+    population_age_4 VARCHAR(100),
+    population_age_5 VARCHAR(100),
+    population_age_6 VARCHAR(100),
+    population_age_7 VARCHAR(100),
+    population_age_8 VARCHAR(100),
+    population_age_9 VARCHAR(100),
+    population_age_10 VARCHAR(100),
+    population_age_11 VARCHAR(100),
+    population_age_12 VARCHAR(100),
+    population_age_13 VARCHAR(100),
+    population_age_14 VARCHAR(100),
+    population_age_15 VARCHAR(100),
+    population_age_16 VARCHAR(100),
+    population_age_17 VARCHAR(100),
+    population_age_18 VARCHAR(100),
+    population_age_19 VARCHAR(100),
+    population_age_20 VARCHAR(100),
+    population_age_21 VARCHAR(100),
+    population_age_22 VARCHAR(100),
+    population_age_23 VARCHAR(100),
+    population_age_24 VARCHAR(100),
+    population_age_25 VARCHAR(100),
+    population_age_26 VARCHAR(100),
+    population_age_27 VARCHAR(100),
+    population_age_28 VARCHAR(100),
+    population_age_29 VARCHAR(100),
+    population_age_30 VARCHAR(100),
+    population_age_31 VARCHAR(100),
+    population_age_32 VARCHAR(100),
+    population_age_33 VARCHAR(100),
+    population_age_34 VARCHAR(100),
+    population_age_35 VARCHAR(100),
+    population_age_36 VARCHAR(100),
+    population_age_37 VARCHAR(100),
+    population_age_38 VARCHAR(100),
+    population_age_39 VARCHAR(100),
+    population_age_40 VARCHAR(100),
+    population_age_41 VARCHAR(100),
+    population_age_42 VARCHAR(100),
+    population_age_43 VARCHAR(100),
+    population_age_44 VARCHAR(100),
+    population_age_45 VARCHAR(100),
+    population_age_46 VARCHAR(100),
+    population_age_47 VARCHAR(100),
+    population_age_48 VARCHAR(100),
+    population_age_49 VARCHAR(100),
+    population_age_50 VARCHAR(100),
+    population_age_51 VARCHAR(100),
+    population_age_52 VARCHAR(100),
+    population_age_53 VARCHAR(100),
+    population_age_54 VARCHAR(100),
+    population_age_55 VARCHAR(100),
+    population_age_56 VARCHAR(100),
+    population_age_57 VARCHAR(100),
+    population_age_58 VARCHAR(100),
+    population_age_59 VARCHAR(100),
+    population_age_60 VARCHAR(100),
+    population_age_61 VARCHAR(100),
+    population_age_62 VARCHAR(100),
+    population_age_63 VARCHAR(100),
+    population_age_64 VARCHAR(100),
+    population_age_65 VARCHAR(100),
+    population_age_66 VARCHAR(100),
+    population_age_67 VARCHAR(100),
+    population_age_68 VARCHAR(100),
+    population_age_69 VARCHAR(100),
+    population_age_70 VARCHAR(100),
+    population_age_71 VARCHAR(100),
+    population_age_72 VARCHAR(100),
+    population_age_73 VARCHAR(100),
+    population_age_74 VARCHAR(100),
+    population_age_75 VARCHAR(100),
+    population_age_76 VARCHAR(100),
+    population_age_77 VARCHAR(100),
+    population_age_78 VARCHAR(100),
+    population_age_79 VARCHAR(100),
+    population_age_80 VARCHAR(100),
+    population_age_81 VARCHAR(100),
+    population_age_82 VARCHAR(100),
+    population_age_83 VARCHAR(100),
+    population_age_84 VARCHAR(100),
+    population_age_85 VARCHAR(100),
+    population_age_86 VARCHAR(100),
+    population_age_87 VARCHAR(100),
+    population_age_88 VARCHAR(100),
+    population_age_89 VARCHAR(100),
+    population_age_90 VARCHAR(100),
+    population_age_91 VARCHAR(100),
+    population_age_92 VARCHAR(100),
+    population_age_93 VARCHAR(100),
+    population_age_94 VARCHAR(100),
+    population_age_95 VARCHAR(100),
+    population_age_96 VARCHAR(100),
+    population_age_97 VARCHAR(100),
+    population_age_98 VARCHAR(100),
+    population_age_99 VARCHAR(100),
+    population_age_100 VARCHAR(100),
+    age VARCHAR(100),
+    permutation_role VARCHAR(100),
+    population VARCHAR(100),
+    ISO_Code INT,
+    PRIMARY KEY (ISO_Code,year,sex,age),
+    FOREIGN KEY (ISO_Code) REFERENCES countries(ISO_Code)
+);
+
 
 
 
@@ -536,6 +652,13 @@ IGNORE 1 ROWS;
 
 LOAD DATA INFILE "C:/Users/PC-023/Documents/GitHub/Vaseis2/modified/modified_midyear_population_age_sex.csv"
 INTO TABLE midyear_population_age_sex
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+LOAD DATA INFILE "C:/Users/PC-023/Documents/GitHub/Vaseis2/modified/modified_midyear_population_age_country_code.csv"
+INTO TABLE midyear_population_age_country_code
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'

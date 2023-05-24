@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -31,7 +32,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import mye030.DBMS_data_visualization.controller.DBcontroller;
-import mye030.DBMS_data_visualization.DAO.CountryDAO;
+import mye030.DBMS_data_visualization.DAO.*;
 import mye030.DBMS_data_visualization.services.CountryImpl;
 import mye030.DBMS_data_visualization.services.CountryService;
 
@@ -53,11 +54,52 @@ import mye030.DBMS_data_visualization.entities.Country;
 @ComponentScan("mye030.DBMS_data_visualization.dao")
 public class GraphicalInterface extends JFrame implements CommandLineRunner{
 
-  private JPanel contentPane;
+ 
+
+
+
+
+
+private JPanel contentPane;
   @Autowired
-  private CountryDAO cDAO;
+  private CountryDAO CountryRepository;
+  @Autowired
+  private AgeSpecificFertilityRateDAO AgeSpecificFertilityRateRepository;
+  @Autowired
+  private BirthDeathGrowthRateDAO BirthDeathGrowthRateRepository;
+  @Autowired
+  private CountryNamesAreaDAO CountryNamesAreaRepository;
+  @Autowired
+  private DomesticCreditDAO DomesticCreditRepository;
+  @Autowired
+  private EstimatedGniFemaleDAO EstimatedGniFemaleRepository;
+  @Autowired
+  private EstimatedGniMaleDAO EstimatedGniMaleRepository;
+  @Autowired
+  private GdpPerCapitaDAO GdpPerCapitaRepository;
+  @Autowired
+  private GdpTotalDAO GdpTotalRepository;
+  @Autowired
+  private GniPerCapitaDAO GniPerCapitaRepository;
+  @Autowired
+  private GrossFixedCapitalFormationDAO GrossFixedCapitalFormationRepository;
+  @Autowired
+  private IncomeIndexDAO IncomeIndexRepository;
+  @Autowired
+  private LabourShareOfGdpDAO LabourShareOfGdpRepository;
+  @Autowired
+  private MidyearPopulation5yrAgeSexDAO MidyearPopulation5yrAgeSexRepository;
+  @Autowired
+  private MidyearPopulationAgeCountryCodeDAO MidyearPopulationAgeCountryCodeRepository;
+  @Autowired
+  private MidyearPopulationAgeSexDAO MidyearPopulationAgeSexRepository;
+  @Autowired
+  private MidyearPopulationDAO MidyearPopulationRepository;
+  @Autowired
+  private MortalityLifeExpectancyDAO MortalityLifeExpectancyRepository;
+  
   //@Autowired
-  //private countriesImpl CService = new countriesImpl(cDAO);
+  //private countriesImpl CService = new countriesImpl(CountryRepository);
   //private DBcontroller Manager = new DBcontroller();
   //private String taxpayersTRN = new String();
   //private JTextField txtTaxRegistrationNumber;
@@ -73,7 +115,19 @@ public class GraphicalInterface extends JFrame implements CommandLineRunner{
 	  EventQueue.invokeLater(new Runnable() {
 	      public void run() {
 	        try {
-	          GraphicalInterface frame = new GraphicalInterface(cDAO);
+	          GraphicalInterface frame = new GraphicalInterface(CountryRepository,
+	      			AgeSpecificFertilityRateRepository,
+	    			BirthDeathGrowthRateRepository, CountryNamesAreaRepository,
+	    			DomesticCreditRepository, EstimatedGniFemaleRepository,
+	    			EstimatedGniMaleRepository, GdpPerCapitaRepository,
+	    			GdpTotalRepository, GniPerCapitaRepository,
+	    			GrossFixedCapitalFormationRepository, IncomeIndexRepository,
+	    			LabourShareOfGdpRepository,
+	    			MidyearPopulation5yrAgeSexRepository,
+	    			MidyearPopulationAgeCountryCodeRepository,
+	    			MidyearPopulationAgeSexRepository,
+	    			MidyearPopulationRepository,
+	    			MortalityLifeExpectancyRepository);
 	          frame.initialize();
 	          frame.setVisible(true);
 	        } catch (Exception e) {
@@ -84,19 +138,60 @@ public class GraphicalInterface extends JFrame implements CommandLineRunner{
   }
   
   @Autowired
-  public GraphicalInterface(CountryDAO cDAO) {
-      this.cDAO = cDAO;
-      //initialize();
-  }
+  public GraphicalInterface(CountryDAO countryRepository,
+			AgeSpecificFertilityRateDAO ageSpecificFertilityRateRepository,
+			BirthDeathGrowthRateDAO birthDeathGrowthRateRepository, CountryNamesAreaDAO countryNamesAreaRepository,
+			DomesticCreditDAO domesticCreditRepository, EstimatedGniFemaleDAO estimatedGniFemaleRepository,
+			EstimatedGniMaleDAO estimatedGniMaleRepository, GdpPerCapitaDAO gdpPerCapitaRepository,
+			GdpTotalDAO gdpTotalRepository, GniPerCapitaDAO gniPerCapitaRepository,
+			GrossFixedCapitalFormationDAO grossFixedCapitalFormationRepository, IncomeIndexDAO incomeIndexRepository,
+			LabourShareOfGdpDAO labourShareOfGdpRepository,
+			MidyearPopulation5yrAgeSexDAO midyearPopulation5yrAgeSexRepository,
+			MidyearPopulationAgeCountryCodeDAO midyearPopulationAgeCountryCodeRepository,
+			MidyearPopulationAgeSexDAO midyearPopulationAgeSexRepository,
+			MidyearPopulationDAO midyearPopulationRepository,
+			MortalityLifeExpectancyDAO mortalityLifeExpectancyRepository){
+		
+		CountryRepository = countryRepository;
+		AgeSpecificFertilityRateRepository = ageSpecificFertilityRateRepository;
+		BirthDeathGrowthRateRepository = birthDeathGrowthRateRepository;
+		CountryNamesAreaRepository = countryNamesAreaRepository;
+		DomesticCreditRepository = domesticCreditRepository;
+		EstimatedGniFemaleRepository = estimatedGniFemaleRepository;
+		EstimatedGniMaleRepository = estimatedGniMaleRepository;
+		GdpPerCapitaRepository = gdpPerCapitaRepository;
+		GdpTotalRepository = gdpTotalRepository;
+		GniPerCapitaRepository = gniPerCapitaRepository;
+		GrossFixedCapitalFormationRepository = grossFixedCapitalFormationRepository;
+		IncomeIndexRepository = incomeIndexRepository;
+		LabourShareOfGdpRepository = labourShareOfGdpRepository;
+		MidyearPopulation5yrAgeSexRepository = midyearPopulation5yrAgeSexRepository;
+		MidyearPopulationAgeCountryCodeRepository = midyearPopulationAgeCountryCodeRepository;
+		MidyearPopulationAgeSexRepository = midyearPopulationAgeSexRepository;
+		MidyearPopulationRepository = midyearPopulationRepository;
+		MortalityLifeExpectancyRepository = mortalityLifeExpectancyRepository;
+	}
   
   
   public void initialize() {
 	  
-	CountryImpl CService = new CountryImpl(cDAO);
+	CountryImpl CService = new CountryImpl(CountryRepository,
+  			AgeSpecificFertilityRateRepository,
+			BirthDeathGrowthRateRepository, CountryNamesAreaRepository,
+			DomesticCreditRepository, EstimatedGniFemaleRepository,
+			EstimatedGniMaleRepository, GdpPerCapitaRepository,
+			GdpTotalRepository, GniPerCapitaRepository,
+			GrossFixedCapitalFormationRepository, IncomeIndexRepository,
+			LabourShareOfGdpRepository,
+			MidyearPopulation5yrAgeSexRepository,
+			MidyearPopulationAgeCountryCodeRepository,
+			MidyearPopulationAgeSexRepository,
+			MidyearPopulationRepository,
+			MortalityLifeExpectancyRepository);
 	//System.out.println(CService.findAll().size());			
-	//System.out.println(cDAO.findAll().get(100).getOfficial_Name());
+	//System.out.println(CountryRepository.findAll().get(100).getOfficial_Name());
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setBounds(100, 100, 450, 500);
+    setBounds(100, 100, 480, 530);
     contentPane = new JPanel();
     contentPane.setBackground(new Color(204, 204, 204));
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -154,6 +249,28 @@ public class GraphicalInterface extends JFrame implements CommandLineRunner{
     JCheckBox scatterCheckBox = new JCheckBox("Scatter Plot");
     JCheckBox barCheckBox = new JCheckBox("Barchart");
     JCheckBox lineCheckBox = new JCheckBox("Trendline");
+    JLabel lowLabel = new JLabel("From :");
+    JLabel highLabel = new JLabel("To :");
+    JLabel yearRange = new JLabel("Year Range");
+    
+    
+    JButton btnDeleteCountry = new JButton("Delete Country");
+    btnDeleteCountry.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+    	  try {
+    	  selectedCountries.remove(selectedCountriesList.getSelectedValue());
+    	  selectedCountriesListModel.remove(selectedCountriesList.getSelectedIndex());
+    	  }
+    	  catch (ArrayIndexOutOfBoundsException e) {
+              System.out.println("No Country Selected.Caught ArrayIndexOutOfBoundsException: " + e.getMessage());
+          }
+      }
+    });
+    
+    
+    
+    
+    
     
     JButton SubmitButton = new JButton("Submit");
     SubmitButton.addActionListener(e -> {
@@ -162,37 +279,43 @@ public class GraphicalInterface extends JFrame implements CommandLineRunner{
         String Xindex = XIndicesDropDownMenu.getSelectedItem().toString();
         String Yindex = YIndicesDropDownMenu.getSelectedItem().toString();
         System.out.println(Xindex + " " + Yindex);
+        List<List<List<String>>> Data = new ArrayList<>();
         try {
-			Manager.createGraphs(selectedCountries,Xindex,Yindex,Lo,Up);
+			Data = Manager.createGraphs(selectedCountries,Xindex,Yindex,Lo,Up);
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
         if(scatterCheckBox.isSelected()) {
-        	ChartDisplay.createScatterPlot();
+        	ChartDisplay.createScatterPlot(Data,selectedCountries,Xindex,Yindex);
         }
         if(barCheckBox.isSelected()) {
-        	ChartDisplay.createBarChart();
+        	ChartDisplay.createBarChart(Data,Xindex,Yindex);
         }
         if(lineCheckBox.isSelected()) {
-        	ChartDisplay.createLineChart();
+        	ChartDisplay.createLineChart(Data,selectedCountries,Xindex,Yindex);
         }
     });
     
     
-    
-    countriesDropDownMenu.setBounds(147, 0, 139, 23);
-    buttonAddCountry.setBounds(147, 25, 139, 23);
-    XIndicesDropDownMenu.setBounds(147, 50, 139, 23);
-    YIndicesDropDownMenu.setBounds(147, 75, 139, 23);
-    LowerRangeField.setBounds(147, 125, 139, 23);
-    UpperRangeField.setBounds(147, 150, 139, 23);
-    SubmitButton.setBounds(147, 100, 139, 23);
-    scrollPane.setBounds(147, 180, 139, 100);
-    scatterCheckBox.setBounds(147, 300, 100, 25);
-    barCheckBox.setBounds(147, 325, 100, 25);
-    lineCheckBox.setBounds(147, 350, 100, 25);
+    countriesDropDownMenu.setBounds(5, 10, 150, 25);
+    buttonAddCountry.setBounds(5, 45, 150, 25);
+    btnDeleteCountry.setBounds(5, 80, 150, 25);
+    scrollPane.setBounds(5, 115, 300, 120);
+    LowerRangeField.setBounds(45, 275, 110, 25);
+    UpperRangeField.setBounds(45, 310, 110, 25);
+    XIndicesDropDownMenu.setBounds(5, 345, 150, 25);
+    YIndicesDropDownMenu.setBounds(5, 380, 150, 25);
+    scatterCheckBox.setBounds(5, 415, 150, 25);
+    barCheckBox.setBounds(160, 415, 150, 25);
+    lineCheckBox.setBounds(315, 415, 150, 25);
+    SubmitButton.setBounds(160, 450, 150, 30);
+    lowLabel.setBounds(5, 275, 40, 25);
+    highLabel.setBounds(5, 310, 40, 25);
+    yearRange.setBounds(65, 255, 70, 25);
+
+
     contentPane.add(countriesDropDownMenu);
     contentPane.add(buttonAddCountry);
     contentPane.add(XIndicesDropDownMenu);
@@ -204,189 +327,10 @@ public class GraphicalInterface extends JFrame implements CommandLineRunner{
     contentPane.add(scatterCheckBox);
     contentPane.add(barCheckBox);
     contentPane.add(lineCheckBox);
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /*JTextPane textPane = new JTextPane();
-    textPane.setEditable(false);
-    textPane.setBackground(new Color(153, 204, 204));
-    textPane.setBounds(0, 21, 433, 441);
-
-    JPanel fileLoaderPanel = new JPanel(new BorderLayout());
-    JPanel boxPanel = new JPanel(new BorderLayout());
-    JPanel taxRegistrationNumberPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-    JLabel TRN = new JLabel("Give the tax registration number:");
-    JTextField taxRegistrationNumberField = new JTextField(20);
-    taxRegistrationNumberPanel.add(TRN);
-    taxRegistrationNumberPanel.add(taxRegistrationNumberField);
-    JPanel loadPanel = new JPanel(new GridLayout(1, 2));
-    loadPanel.add(taxRegistrationNumberPanel);
-    fileLoaderPanel.add(boxPanel, BorderLayout.NORTH);
-    fileLoaderPanel.add(loadPanel, BorderLayout.CENTER);
-    JCheckBox txtBox = new JCheckBox("Txt file");
-    JCheckBox xmlBox = new JCheckBox("Xml file");
-
-    txtBox.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        xmlBox.setSelected(false);
-      }
-    });
-
-    xmlBox.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        txtBox.setSelected(false);
-      }
-    });
-    txtBox.doClick();
-    boxPanel.add(txtBox, BorderLayout.WEST);
-    boxPanel.add(xmlBox, BorderLayout.EAST);
-
-    DefaultListModel<String> taxRegisterNumberModel = new DefaultListModel<String>();
-
-    JList<String> taxRegisterNumberList = new JList<String>(taxRegisterNumberModel);
-    taxRegisterNumberList.setBackground(new Color(153, 204, 204));
-    taxRegisterNumberList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    taxRegisterNumberList.setSelectedIndex(0);
-    taxRegisterNumberList.setVisibleRowCount(3);
-
-    JScrollPane taxRegisterNumberListScrollPane = new JScrollPane(taxRegisterNumberList);
-    taxRegisterNumberListScrollPane.setSize(300, 300);
-    taxRegisterNumberListScrollPane.setLocation(70, 100);
-    contentPane.add(taxRegisterNumberListScrollPane);
-
-    JButton btnLoadTaxpayer = new JButton("Load Taxpayer");
-    btnLoadTaxpayer.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        int answer = JOptionPane.showConfirmDialog(null, fileLoaderPanel, "",
-            JOptionPane.OK_CANCEL_OPTION);
-        if (answer == 0) {
-          String taxRegistrationNumber = taxRegistrationNumberField.getText();
-          while (taxRegistrationNumber.length() != 9 && answer == 0) {
-            JOptionPane.showMessageDialog(null,
-                "The tax  registration number must have 9 digit.\n" + " Try again.");
-            answer = JOptionPane.showConfirmDialog(null, fileLoaderPanel, "",
-                JOptionPane.OK_CANCEL_OPTION);
-            taxRegistrationNumber = taxRegistrationNumberField.getText();
-          }
-          if (answer == 0) {
-            int trn = 0;
-            String taxRegistrationNumberFile;
-            try {
-              trn = Integer.parseInt(taxRegistrationNumber);
-              if (txtBox.isSelected()) {
-                taxRegistrationNumberFile = taxRegistrationNumber + "_INFO.txt";
-              } else {
-                taxRegistrationNumberFile = taxRegistrationNumber + "_INFO.xml";
-              }
-              if (taxpayerManager.containsTaxpayer(trn)) {
-                JOptionPane.showMessageDialog(null, "This taxpayer is already loaded.");
-              } else {
-                taxpayerManager.loadTaxpayer(taxRegistrationNumberFile);
-                taxRegisterNumberModel.addElement(taxRegistrationNumber);
-              }
-              // textPane.setText(taxpayersTRN);
-            } catch (NumberFormatException e1) {
-              JOptionPane.showMessageDialog(null,
-                  "The tax registration number must have only digits.");
-            } catch (IOException e1) {
-              JOptionPane.showMessageDialog(null, "The file doesn't exists.");
-            } catch (WrongFileFormatException e1) {
-              JOptionPane.showMessageDialog(null, "Please check your file format and try again.");
-            } catch (WrongFileEndingException e1) {
-              JOptionPane.showMessageDialog(null, "Please check your file ending and try again.");
-            } catch (WrongTaxpayerStatusException e1) {
-              JOptionPane.showMessageDialog(null, "Please check taxpayer's status and try again.");
-            } catch (WrongReceiptKindException e1) {
-              JOptionPane.showMessageDialog(null, "Please check receipts kind and try again.");
-            } catch (WrongReceiptDateException e1) {
-              JOptionPane.showMessageDialog(null,
-                  "Please make sure your date is " + "DD/MM/YYYY and try again.");
-            }
-          }
-
-        }
-      }
-    });*/
-    /*btnLoadTaxpayer.setBounds(0, 0, 146, 23);
-    contentPane.add(btnLoadTaxpayer);
-
-    JButton btnSelectTaxpayer = new JButton("Select Taxpayer");
-    btnSelectTaxpayer.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (taxpayerManager.containsTaxpayer()) {
-          String trn = JOptionPane.showInputDialog(null,
-              "Give the tax registration number " + "that you want to be displayed : ");
-          if (trn != null) {
-            int taxRegistrationNumber;
-            try {
-              taxRegistrationNumber = Integer.parseInt(trn);
-              if (taxpayerManager.containsTaxpayer(taxRegistrationNumber)) {
-                TaxpayerData taxpayerData = new TaxpayerData(taxRegistrationNumber,
-                    taxpayerManager);
-                taxpayerData.setVisible(true);
-              } else {
-                JOptionPane.showMessageDialog(null, "This tax registration number isn't loaded.");
-              }
-            } catch (NumberFormatException e1) {
-              JOptionPane.showMessageDialog(null, "You must give a tax registation number.");
-            } catch (Exception e1) {
-              e1.printStackTrace();
-            }
-          }
-        } else {
-          JOptionPane.showMessageDialog(null,
-              "There isn't any taxpayer loaded. Please load one first.");
-        }
-      }
-    });
-    btnSelectTaxpayer.setBounds(147, 0, 139, 23);
-    contentPane.add(btnSelectTaxpayer);
-
-    JButton btnDeleteTaxpayer = new JButton("Delete Taxpayer");
-    btnDeleteTaxpayer.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent arg0) {
-        if (taxpayerManager.containsTaxpayer()) {
-          String trn = JOptionPane.showInputDialog(null,
-              "Give the tax registration number that you want to delete: ");
-          int taxRegistrationNumber;
-          try {
-            taxRegistrationNumber = Integer.parseInt(trn);
-            if (taxpayerManager.containsTaxpayer(taxRegistrationNumber)) {
-              taxpayerManager.removeTaxpayer(taxRegistrationNumber);
-              taxRegisterNumberModel.removeElement(trn);
-            }
-          } catch (NumberFormatException e) {
-
-          }
-        } else {
-          JOptionPane.showMessageDialog(null,
-              "There isn't any taxpayer loaded. Please load one first.");
-        }
-      }
-    });
-    btnDeleteTaxpayer.setBounds(287, 0, 146, 23);
-    contentPane.add(btnDeleteTaxpayer);*/
-
-    /*txtTaxRegistrationNumber = new JTextField();
-    txtTaxRegistrationNumber.setEditable(false);
-    txtTaxRegistrationNumber.setBackground(new Color(153, 204, 204));
-    txtTaxRegistrationNumber.setFont(new Font("Tahoma", Font.BOLD, 14));
-    txtTaxRegistrationNumber.setText("Tax Registration Number:");
-    txtTaxRegistrationNumber.setBounds(70, 80, 300, 20);
-    contentPane.add(txtTaxRegistrationNumber);
-    txtTaxRegistrationNumber.setColumns(10);*/
+    contentPane.add(btnDeleteCountry);
+    contentPane.add(lowLabel);
+    contentPane.add(highLabel);
+    contentPane.add(yearRange);
 
   }
 

@@ -47,15 +47,15 @@ public class DBcontroller{
 	
 	public List<String> getIndices(){
 		List<String> indicesList = new ArrayList<>();
-		indicesList.add("fertility_rate_by_age");
-		indicesList.add("total_fertility_rate");
-		indicesList.add("gross_reproduction_rate");
-		indicesList.add("sex_ratio_at_birth");
-		indicesList.add("crude_birth_rate");
-		indicesList.add("crude_death_rate");
-		indicesList.add("net_migration");
-		indicesList.add("rate_natural_increase");
-		indicesList.add("growth_rate");
+		indicesList.add("Fertility rate by age");
+		indicesList.add("Total fertility rate");
+		indicesList.add("Gross reproduction rate");
+		indicesList.add("Sex ratio at birth");
+		indicesList.add("Crude birth rate");
+		indicesList.add("Crude death rate");
+		indicesList.add("Net migration");
+		indicesList.add("Rate natural increase");
+		indicesList.add("Growth rate");
 		indicesList.add("Domestic credits");
 		indicesList.add("Estimated GNI female");
 		indicesList.add("Estimated GNI male");
@@ -65,50 +65,76 @@ public class DBcontroller{
 		indicesList.add("Gross fixed capital formation");
 		indicesList.add("Income Index");
 		indicesList.add("Labour share of GDP");
-		indicesList.add("midyear_population");
-		indicesList.add("midyear_population_male");
-		indicesList.add("midyear_population_female");
-		indicesList.add("midyear_population_5yr");
-		indicesList.add("midyear_population_male_5yr");
-		indicesList.add("midyear_population_female_5yr");
-		indicesList.add("population by age");
-		indicesList.add("infant_mortality");
-		indicesList.add("infant_mortality_male");
-		indicesList.add("infant_mortality_female");
-		indicesList.add("life_expectancy");
-		indicesList.add("life_expectancy_male");
-		indicesList.add("life_expectancy_female");
-		indicesList.add("mortality_rate_under5");
-		indicesList.add("mortality_rate_under5_male");
-		indicesList.add("mortality_rate_under5_female");
-		indicesList.add("mortality_rate_1to4");
-		indicesList.add("mortality_rate_1to4_male");
-		indicesList.add("mortality_rate_1to4_female");
+		indicesList.add("Midyear population");
+		indicesList.add("Midyear population male");
+		indicesList.add("Midyear population female");
+		indicesList.add("Midyear population 5yr");
+		indicesList.add("Midyear population male 5yr");
+		indicesList.add("Midyear population female 5yr");
+		indicesList.add("Population by age");
+		indicesList.add("Infant mortality");
+		indicesList.add("Infant mortality male");
+		indicesList.add("Infant mortality female");
+		indicesList.add("Life expectancy");
+		indicesList.add("Life expectancy male");
+		indicesList.add("Life expectancy female");
+		indicesList.add("Mortality rate under5");
+		indicesList.add("Mortality rate under5 male");
+		indicesList.add("Mortality rate under5 female");
+		indicesList.add("Mortality rate 1to4");
+		indicesList.add("Mortality rate 1to4 male");
+		indicesList.add("Mortality rate 1to4 female");
 		return indicesList;
 	}
-	public List<?> getAppropriateDataFromDB(String index,String entity, int Low, int High, List<Integer> ISOCodes) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	
+	public List<List<String>> getAppropriateDataFromDB(String index,String entity, int Low, int High, List<Integer> ISOCodes) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		List<List<String>> DBcontentsFiltered = new ArrayList<>();
 		if (entity.equals("AgeSpecificFertilityRate")){
-			List<AgeSpecificFertilityRate> DBcontentsUnfiltered = cService.findAllAgeSpecificFertilityRate();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();			
-			for (AgeSpecificFertilityRate item : DBcontentsUnfiltered) {
-				int year = item.getId().getYear();
-				int iso = item.getId().getISO_Code();
-				if ((Low<=year)&&(year<= High)&&(ISOCodes.contains(iso))) {
-					String thisCountry = item.getCountry().getDisplay_Name();
-					int thisYear = item.getId().getYear();
-					Method method = CountryService.class.getMethod(index);
-			        float thisValue = (float) method.invoke(null);
-					String thisColumn = index;
-					
-					Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
-					
-					DBcontentsFilteredByYear.add(row);				}
+			//TODO NA DW AFTO
+			if (index.equals("FertilityRateByAge")) {
+				List<AgeSpecificFertilityRate> DBcontentsUnfiltered = cService.findAllAgeSpecificFertilityRate();
+				
+				for (AgeSpecificFertilityRate item : DBcontentsUnfiltered) {
+					int year = item.getId().getYear();
+					int iso = item.getId().getISO_Code();
+					if ((Low<=year)&&(year<= High)&&(ISOCodes.contains(iso))) {
+						String thisCountry = item.getCountry().getDisplay_Name();
+						int thisYear = item.getId().getYear();
+						List<String> ranges = Arrays.asList("1519","2024","2529","3034","3539","4044","4549");
+						for (int i =0;i<ranges.size();i++) {
+							Method method = item.getClass().getMethod("getFertilityRate"+ranges.get(i));
+							float thisValue = (float) method.invoke(item);
+							String thisColumn = index;
+							
+							List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn+ranges.get(i));
+							
+							DBcontentsFiltered.add(row);
+						}		
+					}
+				}
 			}
-			return DBcontentsFilteredByYear;
+			else {
+				List<AgeSpecificFertilityRate> DBcontentsUnfiltered = cService.findAllAgeSpecificFertilityRate();
+	
+				for (AgeSpecificFertilityRate item : DBcontentsUnfiltered) {
+					int year = item.getId().getYear();
+					int iso = item.getId().getISO_Code();
+					if ((Low<=year)&&(year<= High)&&(ISOCodes.contains(iso))) {
+						String thisCountry = item.getCountry().getDisplay_Name();
+						int thisYear = item.getId().getYear();
+						Method method = item.getClass().getMethod("get"+index);
+				        float thisValue = (float) method.invoke(item);
+						String thisColumn = index;
+						
+						List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
+						DBcontentsFiltered.add(row);
+					}
+				}
+			}
+			return DBcontentsFiltered;
 		}
 		else if (entity.equals("BirthDeathGrowthRate")){
 			List<BirthDeathGrowthRate> DBcontentsUnfiltered = cService.findAllBirthDeathGrowthRate();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
 			
 			for (BirthDeathGrowthRate item : DBcontentsUnfiltered) {
 				int year = item.getId().getYear();
@@ -117,20 +143,18 @@ public class DBcontroller{
 					
 					String thisCountry = item.getCountry().getDisplay_Name();
 					int thisYear = item.getId().getYear();
-					Method method = CountryService.class.getMethod(index);
-			        float thisValue = (float) method.invoke(null);
+					Method method = item.getClass().getMethod("get"+index);
+			        float thisValue = (float) method.invoke(item);
 					String thisColumn = index;
 					
-					Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
-					
-					DBcontentsFilteredByYear.add(row);
+					List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
+					DBcontentsFiltered.add(row);
 				}
 			}
-			return DBcontentsFilteredByYear;	
+			return DBcontentsFiltered;	
 		}
 		else if (entity.equals("DomesticCredit")){
 			List<DomesticCredit> DBcontentsUnfiltered = cService.findAllDomesticCredit();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
 			List<Integer> myList = new ArrayList<>();
 			myList.add(1990);
 			myList.add(1995);
@@ -153,21 +177,23 @@ public class DBcontroller{
 						
 						String thisCountry = item.getCountry();
 						int thisYear = year;
-						Method method = CountryService.class.getMethod("getYear"+Integer.toString(year));
-				        float thisValue = (float) method.invoke(null);
+						Method method = item.getClass().getMethod("getYear"+Integer.toString(year));
+						String thisValue = (String) method.invoke(item);
 						String thisColumn = index;
 						
-						Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
 						
-						DBcontentsFilteredByYear.add(row);					}
+						List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
+						if (!(thisValue.equals(".."))) {
+							DBcontentsFiltered.add(row);
+				        }
+					}
 				}
 			}
 			
-			return DBcontentsFilteredByYear;	
+			return DBcontentsFiltered;	
 		}
 		else if (entity.equals("EstimatedGniFemale")){
 			List<EstimatedGniFemale> DBcontentsUnfiltered = cService.findAllEstimatedGniFemale();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
 			List<Integer> myList = new ArrayList<>();
 			myList.add(1995);
 			myList.add(2000);
@@ -189,21 +215,22 @@ public class DBcontroller{
 						
 						String thisCountry = item.getCountry();
 						int thisYear = year;
-						Method method = CountryService.class.getMethod("getYear"+Integer.toString(year));
-				        float thisValue = (float) method.invoke(null);
+						Method method = item.getClass().getMethod("getYear"+Integer.toString(year));
+						String thisValue = (String) method.invoke(item);
 						String thisColumn = index;
 						
-						Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
-						
-						DBcontentsFilteredByYear.add(row);					}
+						List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
+						if (!(thisValue.equals(".."))) {
+							DBcontentsFiltered.add(row);
+				        }
+					}
 				}
 			}
 			
-			return DBcontentsFilteredByYear;
+			return DBcontentsFiltered;
 		}
 		else if (entity.equals("EstimatedGniMale")){
 			List<EstimatedGniMale> DBcontentsUnfiltered = cService.findAllEstimatedGniMale();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
 			List<Integer> myList = new ArrayList<>();
 			myList.add(1995);
 			myList.add(2000);
@@ -225,21 +252,22 @@ public class DBcontroller{
 						
 						String thisCountry = item.getCountry();
 						int thisYear = year;
-						Method method = CountryService.class.getMethod("getYear"+Integer.toString(year));
-				        float thisValue = (float) method.invoke(null);
+						Method method = item.getClass().getMethod("getYear"+Integer.toString(year));
+						String thisValue = (String) method.invoke(item);
 						String thisColumn = index;
 						
-						Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
-						
-						DBcontentsFilteredByYear.add(row);					}
+						List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
+						if (!(thisValue.equals(".."))) {
+							DBcontentsFiltered.add(row);
+				        }
+					}
 				}
 			}
 			
-			return DBcontentsFilteredByYear;
+			return DBcontentsFiltered;
 		}
 		else if (entity.equals("GdpPerCapita")){
 			List<GdpPerCapita> DBcontentsUnfiltered = cService.findAllGdpPerCapita();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
 			List<Integer> myList = new ArrayList<>();
 			myList.add(1990);
 			myList.add(1995);
@@ -262,21 +290,22 @@ public class DBcontroller{
 						
 						String thisCountry = item.getCountry();
 						int thisYear = year;
-						Method method = CountryService.class.getMethod("getYear"+Integer.toString(year));
-				        float thisValue = (float) method.invoke(null);
+						Method method = item.getClass().getMethod("getYear"+Integer.toString(year));
+						String thisValue = (String) method.invoke(item);
 						String thisColumn = index;
 						
-						Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
-						
-						DBcontentsFilteredByYear.add(row);					}
+						List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
+						if (!(thisValue.equals(".."))) {
+							DBcontentsFiltered.add(row);
+				        }
+					}
 				}
 			}
 			
-			return DBcontentsFilteredByYear;
+			return DBcontentsFiltered;
 		}
 		else if (entity.equals("GdpTotal")){
 			List<GdpTotal> DBcontentsUnfiltered = cService.findAllGdpTotal();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
 			List<Integer> myList = new ArrayList<>();
 			myList.add(1990);
 			myList.add(1995);
@@ -299,21 +328,22 @@ public class DBcontroller{
 						
 						String thisCountry = item.getCountry();
 						int thisYear = year;
-						Method method = CountryService.class.getMethod("getYear"+Integer.toString(year));
-				        float thisValue = (float) method.invoke(null);
+						Method method = item.getClass().getMethod("getYear"+Integer.toString(year));
+						String thisValue = (String) method.invoke(item);
 						String thisColumn = index;
 						
-						Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
-						
-						DBcontentsFilteredByYear.add(row);					}
+						List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
+						if (!(thisValue.equals(".."))) {
+							DBcontentsFiltered.add(row);
+				        }
+					}
 				}
 			}
 			
-			return DBcontentsFilteredByYear;
+			return DBcontentsFiltered;
 		}
 		else if (entity.equals("GniPerCapita")){
 			List<GniPerCapita> DBcontentsUnfiltered = cService.findAllGniPerCapita();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
 			List<Integer> myList = new ArrayList<>();
 			myList.add(1990);
 			myList.add(1991);
@@ -352,21 +382,22 @@ public class DBcontroller{
 						
 						String thisCountry = item.getCountry();
 						int thisYear = year;
-						Method method = CountryService.class.getMethod("getYear"+Integer.toString(year));
-				        float thisValue = (float) method.invoke(null);
+						Method method = item.getClass().getMethod("getYear"+Integer.toString(year));
+						String thisValue = (String) method.invoke(item);
 						String thisColumn = index;
 						
-						Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
-						
-						DBcontentsFilteredByYear.add(row);					}
+						List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
+						if (!(thisValue.equals(".."))) {
+							DBcontentsFiltered.add(row);
+				        }
+					}
 				}
 			}
 			
-			return DBcontentsFilteredByYear;
+			return DBcontentsFiltered;
 		}
 		else if (entity.equals("GrossFixedCapitalFormation")){
 			List<GrossFixedCapitalFormation> DBcontentsUnfiltered = cService.findAllGrossFixedCapitalFormation();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
 			List<Integer> myList = new ArrayList<>();
 			myList.add(1990);
 			myList.add(1995);
@@ -389,21 +420,22 @@ public class DBcontroller{
 						
 						String thisCountry = item.getCountry();
 						int thisYear = year;
-						Method method = CountryService.class.getMethod("getYear"+Integer.toString(year));
-				        float thisValue = (float) method.invoke(null);
+						Method method = item.getClass().getMethod("getYear"+Integer.toString(year));
+						String thisValue = (String) method.invoke(item);
 						String thisColumn = index;
 						
-						Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
-						
-						DBcontentsFilteredByYear.add(row);					}
+						List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
+						if (!(thisValue.equals(".."))) {
+							DBcontentsFiltered.add(row);
+				        }
+					}
 				}
 			}
 			
-			return DBcontentsFilteredByYear;
+			return DBcontentsFiltered;
 		}
 		else if (entity.equals("IncomeIndex")){
 			List<IncomeIndex> DBcontentsUnfiltered = cService.findAllIncomeIndex();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
 			List<Integer> myList = new ArrayList<>();
 			myList.add(1990);
 			myList.add(1991);
@@ -442,21 +474,22 @@ public class DBcontroller{
 						
 						String thisCountry = item.getCountry();
 						int thisYear = year;
-						Method method = CountryService.class.getMethod("getYear"+Integer.toString(year));
-				        float thisValue = (float) method.invoke(null);
+						Method method = item.getClass().getMethod("getYear"+Integer.toString(year));
+						String thisValue = (String) method.invoke(item);
 						String thisColumn = index;
 						
-						Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
-						
-						DBcontentsFilteredByYear.add(row);					}
+						List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
+						if (!(thisValue.equals(".."))) {
+							DBcontentsFiltered.add(row);
+				        }
+					}
 				}
 			}
 			
-			return DBcontentsFilteredByYear;
+			return DBcontentsFiltered;
 		}
 		else if (entity.equals("LabourShareOfGdp")){
 			List<LabourShareOfGdp> DBcontentsUnfiltered = cService.findAllLabourShareOfGdp();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
 			List<Integer> myList = new ArrayList<>();
 			myList.add(2000);
 			myList.add(2005);
@@ -477,53 +510,77 @@ public class DBcontroller{
 						
 						String thisCountry = item.getCountry();
 						int thisYear = year;
-						Method method = CountryService.class.getMethod("getYear"+Integer.toString(year));
-				        float thisValue = (float) method.invoke(null);
+						Method method = item.getClass().getMethod("getYear"+Integer.toString(year));
+				        String thisValue = (String) method.invoke(item);
 						String thisColumn = index;
 						
-						Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
-						
-						DBcontentsFilteredByYear.add(row);					}
+						List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
+						if (!(thisValue.equals(".."))) {
+							DBcontentsFiltered.add(row);
+				        }
+					}
 				}
 			}
 			
-			return DBcontentsFilteredByYear;
+			return DBcontentsFiltered;
 		}
 		else if (entity.equals("MidyearPopulation")){
 			List<MidyearPopulation> DBcontentsUnfiltered = cService.findAllMidyearPopulation();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
 			for (MidyearPopulation item : DBcontentsUnfiltered) {
 				int year = item.getId().getYear();
 				int iso = item.getId().getISO_Code();
 				if ((Low<=year)&&(year<= High)&&(ISOCodes.contains(iso))) {
 					String thisCountry = item.getCountry().getDisplay_Name();
 					int thisYear = item.getId().getYear();
-					Method method = CountryService.class.getMethod(index);
-			        float thisValue = (float) method.invoke(null);
+					Method method = item.getClass().getMethod("get"+index);
+					String thisValue = (String) method.invoke(item);
 					String thisColumn = index;
 					
-					Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
-					
-					DBcontentsFilteredByYear.add(row);				}
+					List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
+					DBcontentsFiltered.add(row);				}
 			}
-			return DBcontentsFilteredByYear;
+			return DBcontentsFiltered;
 		}
 		else if (entity.equals("MidyearPopulation5yrAgeSex")){
 			List<MidyearPopulation5yrAgeSex> DBcontentsUnfiltered = cService.findAllMidyearPopulation5yrAgeSex();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
 			
 			for (MidyearPopulation5yrAgeSex item : DBcontentsUnfiltered) {
 				int year = item.getId().getYear();
 				int iso = item.getId().getISO_Code();
 				if ((Low<=year)&&(year<= High)&&(ISOCodes.contains(iso))) {
-					DBcontentsFilteredByYear.add(item);
+					String thisCountry = item.getCountry().getDisplay_Name();
+					int thisYear = item.getId().getYear();
+					Method method = item.getClass().getMethod("get"+index);
+					String thisValue = (String) method.invoke(item);
+					String thisColumn = index;
+					
+					List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
+					DBcontentsFiltered.add(row);
 				}
 			}
-			return DBcontentsFilteredByYear;
+			return DBcontentsFiltered;
 		}
 		else if (entity.equals("MidyearPopulationAgeSex")){
+			//TODO NA DW AFTO
 			List<MidyearPopulationAgeSex> DBcontentsUnfiltered = cService.findAllMidyearPopulationAgeSex();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
+			for (int i:ISOCodes) {
+				List<MidyearPopulationAgeCountryCode> DBcontentsUnfiltered1 = cService.findAllByIsoCodeMidyearPopulationAgeCountryCode(i);
+				for (MidyearPopulationAgeCountryCode item : DBcontentsUnfiltered1) {
+					int year = item.getId().getYear();
+					int iso = item.getId().getISO_Code();
+					if ((Low<=year)&&(year<= High)&&(ISOCodes.contains(iso))) {
+						String thisCountry = item.getCountry().getDisplay_Name();
+						int thisYear = item.getId().getYear();
+						Method method = item.getClass().getMethod("getPopulationAge"+Integer.toString(i));
+						String thisValue = (String) method.invoke(item);
+						String thisColumn = index;
+						
+						List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),"Age"+Integer.toString(i));					
+						
+						DBcontentsFiltered.add(row);
+					}
+				}
+			}
 			
 			for (MidyearPopulationAgeSex item : DBcontentsUnfiltered) {
 				int year = item.getId().getYear();
@@ -531,19 +588,23 @@ public class DBcontroller{
 				if ((Low<=year)&&(year<= High)&&(ISOCodes.contains(iso))) {
 					String thisCountry = item.getCountry().getDisplay_Name();
 					int thisYear = item.getId().getYear();
-					Method method = CountryService.class.getMethod(index);
-			        float thisValue = (float) method.invoke(null);
-					String thisColumn = index;
-					
-					Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
-					
-					DBcontentsFilteredByYear.add(row);				}
+					for (int i =0;i<=100;i++) {
+						Method method = item.getClass().getMethod("getPopulationAge"+Integer.toString(i));
+						String thisValue = (String) method.invoke(item);
+						String thisColumn = index;
+						
+						List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),"Age"+Integer.toString(i));
+						
+						DBcontentsFiltered.add(row);
+					}
+				}
 			}
-			return DBcontentsFilteredByYear;
+			
+			
+			return DBcontentsFiltered;
 		}
 		else if (entity.equals("MortalityLifeExpectancy")){
 			List<MortalityLifeExpectancy> DBcontentsUnfiltered = cService.findAllMortalityLifeExpectancy();
-			List<Object> DBcontentsFilteredByYear = new ArrayList<Object>();
 			
 			for (MortalityLifeExpectancy item : DBcontentsUnfiltered) {
 				int year = item.getId().getYear();
@@ -551,32 +612,33 @@ public class DBcontroller{
 				if ((Low<=year)&&(year<= High)&&(ISOCodes.contains(iso))) {
 					String thisCountry = item.getCountry().getDisplay_Name();
 					int thisYear = item.getId().getYear();
-					Method method = CountryService.class.getMethod(index);
-			        float thisValue = (float) method.invoke(null);
+					Method method = item.getClass().getMethod("get"+index);
+					String thisValue = (String) method.invoke(item);
 					String thisColumn = index;
 					
-					Object row = Arrays.asList(thisCountry,thisYear,thisValue,thisColumn);
+					List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),thisColumn);					
 					
-					DBcontentsFilteredByYear.add(row);				}
+					DBcontentsFiltered.add(row);				}
 			}
-			return DBcontentsFilteredByYear;
+			return DBcontentsFiltered;
 		}
-		return ISOCodes;
+		return DBcontentsFiltered;
 		
 	}
 	
-	public void createGraphs(List<String> selectedCountries, String Xindex, String Yindex, String Lo, String Up) throws NumberFormatException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	public List<List<List<String>>> createGraphs(List<String> selectedCountries, String Xindex, String Yindex, String Lo, String Up) throws NumberFormatException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 	
 	HashMap<String, String> fileMatch = new HashMap<>();
-	fileMatch.put("fertility_rate_by_age", "AgeSpecificFertilityRate");
-	fileMatch.put("total_fertility_rate", "AgeSpecificFertilityRate");
-	fileMatch.put("gross_reproduction_rate", "AgeSpecificFertilityRate");
-	fileMatch.put("sex_ratio_at_birth", "AgeSpecificFertilityRate");
-	fileMatch.put("crude_birth_rate", "BirthDeathGrowthRate");
-	fileMatch.put("crude_death_rate", "BirthDeathGrowthRate");
-	fileMatch.put("net_migration", "BirthDeathGrowthRate");
-	fileMatch.put("rate_natural_increase", "BirthDeathGrowthRate");
-	fileMatch.put("growth_rate", "BirthDeathGrowthRate");
+	//TODO NA DW AFTO
+	fileMatch.put("Fertility rate by age", "AgeSpecificFertilityRate");
+	fileMatch.put("Total fertility rate", "AgeSpecificFertilityRate");
+	fileMatch.put("Gross reproduction rate", "AgeSpecificFertilityRate");
+	fileMatch.put("Sex ratio at birth", "AgeSpecificFertilityRate");
+	fileMatch.put("Crude birth rate", "BirthDeathGrowthRate");
+	fileMatch.put("Crude death rate", "BirthDeathGrowthRate");
+	fileMatch.put("Net migration", "BirthDeathGrowthRate");
+	fileMatch.put("Rate natural increase", "BirthDeathGrowthRate");
+	fileMatch.put("Growth rate", "BirthDeathGrowthRate");
 	fileMatch.put("Domestic credits", "DomesticCredit");
 	fileMatch.put("Estimated GNI female", "EstimatedGniFemale");
 	fileMatch.put("Estimated GNI male", "EstimatedGniMale");
@@ -586,28 +648,84 @@ public class DBcontroller{
 	fileMatch.put("Gross fixed capital formation", "GrossFixedCapitalFormation");
 	fileMatch.put("Income Index", "IncomeIndex");
 	fileMatch.put("Labour share of GDP", "LabourShareOfGdp");
-	fileMatch.put("midyear_population", "MidyearPopulation");
-	fileMatch.put("midyear_population_male", "MidyearPopulation");
-	fileMatch.put("midyear_population_female", "MidyearPopulation");
-	fileMatch.put("midyear_population_5yr", "MidyearPopulation5yrAgeSex");
-	fileMatch.put("midyear_population_male_5yr", "MidyearPopulation5yrAgeSex");
-	fileMatch.put("midyear_population_female_5yr", "MidyearPopulation5yrAgeSex");
-	fileMatch.put("population by age", "MidyearPopulationAgeSex");
-	fileMatch.put("infant_mortality", "MortalityLifeExpectancy");
-	fileMatch.put("infant_mortality_male", "MortalityLifeExpectancy");
-	fileMatch.put("infant_mortality_female", "MortalityLifeExpectancy");
-	fileMatch.put("life_expectancy", "MortalityLifeExpectancy");
-	fileMatch.put("life_expectancy_male", "MortalityLifeExpectancy");
-	fileMatch.put("life_expectancy_female", "MortalityLifeExpectancy");
-	fileMatch.put("mortality_rate_under5", "MortalityLifeExpectancy");
-	fileMatch.put("mortality_rate_under5_male", "MortalityLifeExpectancy");
-	fileMatch.put("mortality_rate_under5_female", "MortalityLifeExpectancy");
-	fileMatch.put("mortality_rate_1to4", "MortalityLifeExpectancy");
-	fileMatch.put("mortality_rate_1to4_male", "MortalityLifeExpectancy");
-	fileMatch.put("mortality_rate_1to4_female", "MortalityLifeExpectancy");
+	fileMatch.put("Midyear population", "MidyearPopulation");
+	fileMatch.put("Midyear population male", "MidyearPopulation");
+	fileMatch.put("Midyear population female", "MidyearPopulation");
+	fileMatch.put("Midyear population 5yr", "MidyearPopulation5yrAgeSex");
+	fileMatch.put("Midyear population male 5yr", "MidyearPopulation5yrAgeSex");
+	fileMatch.put("Midyear population female 5yr", "MidyearPopulation5yrAgeSex");
+	//TODO NA DW AFTO
+	fileMatch.put("Population by age", "MidyearPopulationAgeSex");
+	fileMatch.put("Infant mortality", "MortalityLifeExpectancy");
+	fileMatch.put("Iinfant mortality male", "MortalityLifeExpectancy");
+	fileMatch.put("Infant mortality female", "MortalityLifeExpectancy");
+	fileMatch.put("Life expectancy", "MortalityLifeExpectancy");
+	fileMatch.put("Life expectancy male", "MortalityLifeExpectancy");
+	fileMatch.put("Life expectancy female", "MortalityLifeExpectancy");
+	fileMatch.put("Mortality rate under5", "MortalityLifeExpectancy");
+	fileMatch.put("Mortality rate under5 male", "MortalityLifeExpectancy");
+	fileMatch.put("Mortality rate under5 female", "MortalityLifeExpectancy");
+	fileMatch.put("Mortality rate 1to4", "MortalityLifeExpectancy");
+	fileMatch.put("Mortality rate 1to4 male", "MortalityLifeExpectancy");
+	fileMatch.put("Mortality rate 1to4 female", "MortalityLifeExpectancy");
+	
+	
+	
+	HashMap<String, String> functionMatch = new HashMap<>();
+	//TODO NA DW AFTO
+	functionMatch.put("Fertility rate by age", "FertilityRateByAge");
+	functionMatch.put("Total fertility rate", "TotalFertilityRate");
+	functionMatch.put("Gross reproduction rate", "GrossReproductionRate");
+	functionMatch.put("Sex ratio at birth", "SexRatioAtBirth");
+	functionMatch.put("Crude birth rate", "CrudeBirthRate");
+	functionMatch.put("Crude death rate", "CrudeDeathRate");
+	functionMatch.put("Net migration", "NetMigration");
+	functionMatch.put("Rate natural increase", "RateNaturalIncrease");
+	functionMatch.put("Growth rate", "GrowthRate");
+	functionMatch.put("Domestic credits", "Domestic credits");
+	functionMatch.put("Estimated GNI female", "Estimated GNI female");
+	functionMatch.put("Estimated GNI male", "Estimated GNI male");
+	functionMatch.put("GDP per capita", "GDP per capita");
+	functionMatch.put("GDP total", "GDP total");
+	functionMatch.put("GNI per capita", "GNI per capita");
+	functionMatch.put("Gross fixed capital formation", "Gross fixed capital formation");
+	functionMatch.put("Income Index", "Income Index");
+	functionMatch.put("Labour share of GDP", "Labour share of GDP");
+	functionMatch.put("Midyear population", "MidyearPopulation");
+	functionMatch.put("Midyear population male", "MidyearPopulationMale");
+	functionMatch.put("Midyear population female", "MidyearPopulationFemale");
+	functionMatch.put("Midyear population 5yr", "MidyearPopulation5yr");
+	functionMatch.put("Midyear population male 5yr", "MidyearPopulationMale5yr");
+	functionMatch.put("Midyear population female 5yr", "MidyearPopulationFemale5yr");
+	//TODO NA DW AFTO
+	functionMatch.put("Population by age", "PopulationByAge");
+	functionMatch.put("Infant mortality", "InfantMortality");
+	functionMatch.put("Infant mortality male", "InfantMortalityMale");
+	functionMatch.put("Infant mortality female", "InfantMortalityFemale");
+	functionMatch.put("Life expectancy", "LifeExpectancy");
+	functionMatch.put("Life expectancy male", "LifeExpectancyMale");
+	functionMatch.put("Life expectancy female", "LifeExpectancyFemale");
+	functionMatch.put("Mortality rate under5", "MortalityRateUnder5");
+	functionMatch.put("Mortality rate under5 male", "MortalityRateUnder5Male");
+	functionMatch.put("Mortality rate under5 female", "MortalityRateUnder5Female");
+	functionMatch.put("Mortality rate 1to4", "MortalityRate1to4");
+	functionMatch.put("Mortality rate 1to4 male", "MortalityRate1to4Male");
+	functionMatch.put("Mortality rate 1to4 female", "MortalityRate1to4Female");
+
+	
+	
+	
 	
 	String entityX = fileMatch.get(Xindex);
 	String entityY = fileMatch.get(Yindex);
+	
+	if (Lo.equals("")) {
+		Lo = "1980";
+	}
+	if (Up.equals("")) {
+		Up = "2050";
+	}
+		
 	
 	List<Country> allCountries = cService.findAllCountry();
 	List<Integer> ISOCodes = new ArrayList<>();
@@ -618,78 +736,12 @@ public class DBcontroller{
 			}
 		}
 	}
-	List<?> X = getAppropriateDataFromDB(Xindex, entityX, Integer.parseInt(Lo), Integer.parseInt(Up), ISOCodes);
-	List<?> Y = getAppropriateDataFromDB(Yindex, entityY, Integer.parseInt(Lo), Integer.parseInt(Up), ISOCodes);
+	List<List<String>> X = getAppropriateDataFromDB(functionMatch.get(Xindex), entityX, Integer.parseInt(Lo), Integer.parseInt(Up), ISOCodes);
+	List<List<String>> Y = getAppropriateDataFromDB(functionMatch.get(Yindex), entityY, Integer.parseInt(Lo), Integer.parseInt(Up), ISOCodes);
 	
-	
-	
-	
-	
-	
-	
-	/*
-	
-	public String listCourses(Model theModel) {
-		
-		//create a new list containing all courses
-		List<Course> theCourses = courseService.findAll();
-		 //add the courses to the spring model
-		theModel.addAttribute("courses", theCourses);
-		
-		return "courses/list-courses";
-	}
-	
-	
-	
-	public String showFormForAdd(Model theModel) {
-		
-		// create new course
-		Course theCourse = new Course();
-		//add the new course to the spring model
-		theModel.addAttribute("course", theCourse);
-		
-		return "courses/course-form";
-	}
-	
-	public String showFormForUpdate(@RequestParam("courseId") int theId,
-									Model theModel) {
-		
-		
-		// get the course from the service
-		Course theCourse = courseService.findById(theId);
-		
-		courseService.save(theCourse);
-		
-		
-		// set course as a model attribute to pre-populate the form
-		theModel.addAttribute("course", theCourse);
-		
-		// send over to our form
-		return "courses/course-form";			
-	}
-	public String saveCourse(@ModelAttribute("course") Course theCourse) {
-		
-		// save the course
-		courseService.save(theCourse);
-		
-		// use a redirect to prevent duplicate submissions
-		return "redirect:/courses/list";
-	}
-	public String delete(@RequestParam("courseId") int theId) {
-		
-		List<StudentRegistration> studRegs = studentRegistrationService.findAllByCourseid(theId);
-		int size = studRegs.size();
-		for (int i=0;i<size;i++) {
-			studentRegistrationService.deleteById(studRegs.get(i).getId());
-		}
-		
-		// delete the course
-		
-		courseService.deleteById(theId);
-		
-		// redirect to /courses/list
-		return "redirect:/courses/list";
-		
-	}*/
+	List<List<List<String>>> Data = new ArrayList<>();
+	Data.add(X);
+	Data.add(Y);
+	return Data;
 	}
 }

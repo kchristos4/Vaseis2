@@ -25,30 +25,30 @@ import org.jfree.ui.RefineryUtilities;
 class ChartDisplay {
 
   
-  static JFrame createScatterPlot() {
+  static JFrame createScatterPlot(List<List<List<String>>> Data,List<String> selectedCountries,String xAxis,String yAxis) {
 	JFrame ScatterPlotFrame = new JFrame("Scatter Plot");
 	ScatterPlotFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	ScatterPlotFrame.setLayout(new BorderLayout(0, 5));
-	ScatterPlotFrame.add(ScatterPlotPanel(), BorderLayout.CENTER);
+	ScatterPlotFrame.add(ScatterPlotPanel(Data,selectedCountries,xAxis,yAxis), BorderLayout.CENTER);
 	ScatterPlotFrame.pack();
 	RefineryUtilities.centerFrameOnScreen(ScatterPlotFrame);
 	ScatterPlotFrame.setVisible(true);
 	return ScatterPlotFrame;
   }
   
-  private static ChartPanel ScatterPlotPanel() {
+  private static ChartPanel ScatterPlotPanel(List<List<List<String>>> Data,List<String> selectedCountries,String xAxis,String yAxis) {
 	  
-	JFreeChart scatterPlot = ChartFactory.createScatterPlot("", "", "Birth Rates", createDefaultCategoryDatasetScatterPlot());
+	JFreeChart scatterPlot = ChartFactory.createScatterPlot("", xAxis, yAxis, createDefaultCategoryDatasetScatterPlot(Data,selectedCountries));
 	ChartPanel scatterPlotPanel = new ChartPanel(scatterPlot);
 	scatterPlotPanel.setPreferredSize(new java.awt.Dimension(450, 550));
 	return scatterPlotPanel;
   }
   
-  static JFrame createLineChart() {
+  static JFrame createLineChart(List<List<List<String>>> Data,List<String> selectedCountries,String xAxis,String yAxis) {
 	JFrame LineChartFrame = new JFrame("Line Chart");
 	LineChartFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	LineChartFrame.setLayout(new BorderLayout(0, 5));
-	LineChartFrame.add(LineChartPanel(), BorderLayout.CENTER);
+	LineChartFrame.add(LineChartPanel(Data,selectedCountries,xAxis,yAxis), BorderLayout.CENTER);
 	LineChartFrame.pack();
 	RefineryUtilities.centerFrameOnScreen(LineChartFrame);
 	LineChartFrame.setLocation(2500, 1000);
@@ -56,9 +56,9 @@ class ChartDisplay {
 	return LineChartFrame;
   }
 	  
-  private static ChartPanel LineChartPanel() {
+  private static ChartPanel LineChartPanel(List<List<List<String>>> Data,List<String> selectedCountries,String xAxis,String yAxis) {
 		  
-	JFreeChart lineChart = ChartFactory.createXYLineChart("", "", "Birth Rates", createDefaultCategoryDatasetScatterPlot());
+	JFreeChart lineChart = ChartFactory.createXYLineChart("", xAxis, yAxis, createDefaultCategoryDatasetScatterPlot(Data,selectedCountries));
 	XYPlot plot = lineChart.getXYPlot();
 	XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 	renderer.setSeriesShapesVisible(0, true); // Show data points as shapes 
@@ -69,66 +69,84 @@ class ChartDisplay {
 	return lineChartPanel;
   }
 	
-  static JFrame createBarChart() {
+  static JFrame createBarChart(List<List<List<String>>> Data,String xAxis,String yAxis) {
     JFrame barChartFrame = new JFrame("Bar Chart");
     barChartFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     barChartFrame.setLayout(new BorderLayout(0, 5));
-    barChartFrame.add(createBarChartPanel(), BorderLayout.CENTER);
+    barChartFrame.add(createBarChartPanel(Data,xAxis,yAxis), BorderLayout.CENTER);
     barChartFrame.pack();
     RefineryUtilities.centerFrameOnScreen(barChartFrame);
     barChartFrame.setVisible(true);
     return barChartFrame;
   }
 
-  private static ChartPanel createBarChartPanel() {
-    JFreeChart barChart = ChartFactory.createBarChart("", "", "Tax analysis in $",
-        createDefaultCategoryDatasetBarChart(), PlotOrientation.VERTICAL,
+  private static ChartPanel createBarChartPanel(List<List<List<String>>> Data,String xAxis,String yAxis) {
+    JFreeChart barChart = ChartFactory.createBarChart("", "", yAxis+", "+xAxis,
+    		createDefaultCategoryDatasetBarChart(Data), PlotOrientation.VERTICAL,
         true, true, false);
     ChartPanel barChartPanel = new ChartPanel(barChart);
     barChartPanel.setPreferredSize(new java.awt.Dimension(450, 550));
     return barChartPanel;
   }
 
-  private static CategoryDataset createDefaultCategoryDatasetBarChart() {
+  private static CategoryDataset createDefaultCategoryDatasetBarChart(List<List<List<String>>> Data) {
     DefaultCategoryDataset barChartDataset = new DefaultCategoryDataset();
-    
-    List<String> s1 = new ArrayList<String>(Arrays.asList("Greece", "2016", "571", "Birth Rate"));
-    List<String> s4 = new ArrayList<String>(Arrays.asList("Greece", "2017", "571", "Birth Rate"));
-    List<String> s2 = new ArrayList<String>(Arrays.asList("Albania", "2017", "654", "Birth Rate"));
-    List<String> s3 = new ArrayList<String>(Arrays.asList("Turkey", "2017", "684", "Birth Rate sad"));
-    List<List<String>> temp = new ArrayList<List<String>>(Arrays.asList(s1, s2, s3, s4));
 
+    List<List<String>> temp = new ArrayList<>();
+    
+    for (List<List<String>> lst : Data) {
+    	for (List<String> line : lst) {
+    		List<String> s = new ArrayList<String>(Arrays.asList(line.get(0), line.get(1), line.get(2), line.get(3)));
+    		temp.add(s);
+    	}
+    }
     
     for(List<String> d : temp) {
-    	int val = Integer.parseInt(d.get(2));
+    	float val = Float.parseFloat(d.get(2));
     	String year = d.get(1);
     	String valueName = d.get(3);
     	String country  = d.get(0);
-    	barChartDataset.addValue(val, country, year);//h ka8e grammh 8a einai tou styl xwra year ari8mos onoma 
+    	System.out.println(val+" "+country+" "+year);
+    	barChartDataset.addValue(val, country+" "+valueName, year);//h ka8e grammh 8a einai tou styl xwra year ari8mos onoma 
     }
 	  
     return barChartDataset;
   }
   
-  private static XYDataset createDefaultCategoryDatasetScatterPlot() {
+  private static XYDataset createDefaultCategoryDatasetScatterPlot(List<List<List<String>>> Data,List<String> selectedCountries) {
 	  XYSeriesCollection scatterPlotDataset = new XYSeriesCollection();
-	  XYSeries series1 = new XYSeries("greece");
-	  series1.add(2015, 571);
-	  series1.add(2016, 654);
-	  series1.add(2017, 684);
-	  XYSeries series2 = new XYSeries("albania");
-	  series2.add(2015, 984);
-	  series2.add(2016, 156);
-	  series2.add(2017, 321);
-	  series2.add(2018, 984);
-	  series2.add(2019, 954);
-	  XYSeries series3 = new XYSeries("turkey");
-	  series3.add(2015, 959);
-	  series3.add(2016, 190);
-	  series3.add(2017, 741);
-	  scatterPlotDataset.addSeries(series1);
-	  scatterPlotDataset.addSeries(series2);
-	  scatterPlotDataset.addSeries(series3);
+	  
+	  for (String country : selectedCountries) {
+		  XYSeries series1 = new XYSeries(country);
+		  List<List<String>> temp = Data.get(0);
+		  List<List<String>> Xlst = new ArrayList<>();
+		  for (List<String> row : temp) {
+			 if (row.get(0).equals(country)) {
+				 Xlst.add(row);
+			 }
+		  }
+		  
+		  temp = Data.get(1);
+		  List<List<String>> Ylst = new ArrayList<>();
+		  for (List<String> row : temp) {
+			 if (row.get(0).equals(country)) {
+				 Ylst.add(row);
+			 }
+		  }
+		  
+		  for (List<String> lineX : Xlst) {
+			  for (List<String> lineY : Ylst) {
+				  if (lineX.get(1).equals(lineY.get(1))) {
+					  series1.add(Float.parseFloat(lineX.get(2)),Float.parseFloat(lineY.get(2)));
+					  System.out.println(country+" "+lineX.get(2)+" "+lineY.get(2));
+				  }
+			  }
+			  
+		  }
+		  scatterPlotDataset.addSeries(series1);
+	  }
+		  
+	  
 	  return scatterPlotDataset;
   }
 
