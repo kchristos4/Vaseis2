@@ -6,7 +6,7 @@ subprocess.run("cls" if subprocess.os.name == "nt" else "clear", shell=True)
 files = os.listdir(os.getcwd())
 if not os.path.exists("modified"):
     os.mkdir("modified")
-print(files)
+#print(files)
 
 tempFiles= []
 #if a file is a folder remove it from the list
