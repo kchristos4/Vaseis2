@@ -1,6 +1,8 @@
 package mye030.DBMS_data_visualization;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,12 +28,18 @@ class ChartDisplay {
 
   
   static JFrame createScatterPlot(List<List<List<String>>> Data,List<String> selectedCountries,String xAxis,String yAxis) {
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	int screenWidth = screenSize.width;
+    int screenHeight = screenSize.height;
+    int leftWindowX = (screenWidth/2) - 450;
+    int leftWindowY = (screenHeight/2)-250;
 	JFrame ScatterPlotFrame = new JFrame("Scatter Plot");
 	ScatterPlotFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	ScatterPlotFrame.setLayout(new BorderLayout(0, 5));
 	ScatterPlotFrame.add(ScatterPlotPanel(Data,selectedCountries,xAxis,yAxis), BorderLayout.CENTER);
 	ScatterPlotFrame.pack();
 	RefineryUtilities.centerFrameOnScreen(ScatterPlotFrame);
+	ScatterPlotFrame.setLocation(leftWindowX, leftWindowY);
 	ScatterPlotFrame.setVisible(true);
 	return ScatterPlotFrame;
   }
@@ -51,7 +59,12 @@ class ChartDisplay {
 	LineChartFrame.add(LineChartPanel(Data,selectedCountries,xAxis,yAxis), BorderLayout.CENTER);
 	LineChartFrame.pack();
 	RefineryUtilities.centerFrameOnScreen(LineChartFrame);
-	LineChartFrame.setLocation(2500, 1000);
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    int screenWidth = screenSize.width;
+    int screenHeight = screenSize.height;
+    int rightWindowX = (screenWidth/2)+450;
+    int rightWindowY = (screenHeight/2)-250;
+    LineChartFrame.setLocation(rightWindowX, rightWindowY);
 	LineChartFrame.setVisible(true);
 	return LineChartFrame;
   }
@@ -76,6 +89,12 @@ class ChartDisplay {
     barChartFrame.add(createBarChartPanel(Data,xAxis,yAxis), BorderLayout.CENTER);
     barChartFrame.pack();
     RefineryUtilities.centerFrameOnScreen(barChartFrame);
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    int screenWidth = screenSize.width;
+    int screenHeight = screenSize.height;
+    int centerWindowX = (screenWidth/2);
+    int centerWindowY = (screenHeight/2)-250;
+    barChartFrame.setLocation(centerWindowX, centerWindowY);
     barChartFrame.setVisible(true);
     return barChartFrame;
   }

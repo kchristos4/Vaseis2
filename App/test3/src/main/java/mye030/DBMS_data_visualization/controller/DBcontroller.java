@@ -89,6 +89,7 @@ public class DBcontroller{
 	
 	public List<List<String>> getAppropriateDataFromDB(String index,String entity, int Low, int High, List<Integer> ISOCodes) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		List<List<String>> DBcontentsFiltered = new ArrayList<>();
+		System.out.println(entity);
 		if (entity.equals("AgeSpecificFertilityRate")){
 			//TODO NA DW AFTO
 			if (index.equals("FertilityRateByAge")) {
@@ -563,24 +564,27 @@ public class DBcontroller{
 		else if (entity.equals("MidyearPopulationAgeSex")){
 			//TODO NA DW AFTO
 			List<MidyearPopulationAgeSex> DBcontentsUnfiltered = cService.findAllMidyearPopulationAgeSex();
-			for (int i:ISOCodes) {
-				List<MidyearPopulationAgeCountryCode> DBcontentsUnfiltered1 = cService.findAllByIsoCodeMidyearPopulationAgeCountryCode(i);
-				for (MidyearPopulationAgeCountryCode item : DBcontentsUnfiltered1) {
-					int year = item.getId().getYear();
-					int iso = item.getId().getISO_Code();
-					if ((Low<=year)&&(year<= High)&&(ISOCodes.contains(iso))) {
-						String thisCountry = item.getCountry().getDisplay_Name();
-						int thisYear = item.getId().getYear();
-						Method method = item.getClass().getMethod("getPopulationAge"+Integer.toString(i));
-						String thisValue = (String) method.invoke(item);
-						String thisColumn = index;
-						
-						List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),"Age"+Integer.toString(i));					
-						
-						DBcontentsFiltered.add(row);
+			if(index.equals("PopulationByAge")) {
+				for (int i:ISOCodes) {
+					List<MidyearPopulationAgeCountryCode> DBcontentsUnfiltered1 = cService.findAllByIsoCodeMidyearPopulationAgeCountryCode(i);
+					for (MidyearPopulationAgeCountryCode item : DBcontentsUnfiltered1) {
+						int year = item.getId().getYear();
+						int iso = item.getId().getISO_Code();
+						if ((Low<=year)&&(year<= High)&&(ISOCodes.contains(iso))) {
+							String thisCountry = item.getCountry().getDisplay_Name();
+							int thisYear = item.getId().getYear();
+							Method method = item.getClass().getMethod("getPopulationAge"+Integer.toString(i));
+							String thisValue = (String) method.invoke(item);
+							String thisColumn = index;
+							
+							List<String> row = Arrays.asList(thisCountry,String.valueOf(thisYear),String.valueOf(thisValue),"Age"+Integer.toString(i));					
+							
+							DBcontentsFiltered.add(row);
+						}
 					}
 				}
 			}
+			
 			
 			for (MidyearPopulationAgeSex item : DBcontentsUnfiltered) {
 				int year = item.getId().getYear();
@@ -629,7 +633,6 @@ public class DBcontroller{
 	public List<List<List<String>>> createGraphs(List<String> selectedCountries, String Xindex, String Yindex, String Lo, String Up) throws NumberFormatException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 	
 	HashMap<String, String> fileMatch = new HashMap<>();
-	//TODO NA DW AFTO
 	fileMatch.put("Fertility rate by age", "AgeSpecificFertilityRate");
 	fileMatch.put("Total fertility rate", "AgeSpecificFertilityRate");
 	fileMatch.put("Gross reproduction rate", "AgeSpecificFertilityRate");
@@ -649,15 +652,14 @@ public class DBcontroller{
 	fileMatch.put("Income Index", "IncomeIndex");
 	fileMatch.put("Labour share of GDP", "LabourShareOfGdp");
 	fileMatch.put("Midyear population", "MidyearPopulation");
-	fileMatch.put("Midyear population male", "MidyearPopulation");
-	fileMatch.put("Midyear population female", "MidyearPopulation");
+	fileMatch.put("Midyear population male", "MidyearPopulationAgeSex");
+	fileMatch.put("Midyear population female", "MidyearPopulationAgeSex");
 	fileMatch.put("Midyear population 5yr", "MidyearPopulation5yrAgeSex");
 	fileMatch.put("Midyear population male 5yr", "MidyearPopulation5yrAgeSex");
 	fileMatch.put("Midyear population female 5yr", "MidyearPopulation5yrAgeSex");
-	//TODO NA DW AFTO
 	fileMatch.put("Population by age", "MidyearPopulationAgeSex");
 	fileMatch.put("Infant mortality", "MortalityLifeExpectancy");
-	fileMatch.put("Iinfant mortality male", "MortalityLifeExpectancy");
+	fileMatch.put("Infant mortality male", "MortalityLifeExpectancy");
 	fileMatch.put("Infant mortality female", "MortalityLifeExpectancy");
 	fileMatch.put("Life expectancy", "MortalityLifeExpectancy");
 	fileMatch.put("Life expectancy male", "MortalityLifeExpectancy");
@@ -672,7 +674,7 @@ public class DBcontroller{
 	
 	
 	HashMap<String, String> functionMatch = new HashMap<>();
-	//TODO NA DW AFTO
+
 	functionMatch.put("Fertility rate by age", "FertilityRateByAge");
 	functionMatch.put("Total fertility rate", "TotalFertilityRate");
 	functionMatch.put("Gross reproduction rate", "GrossReproductionRate");
@@ -694,10 +696,9 @@ public class DBcontroller{
 	functionMatch.put("Midyear population", "MidyearPopulation");
 	functionMatch.put("Midyear population male", "MidyearPopulationMale");
 	functionMatch.put("Midyear population female", "MidyearPopulationFemale");
-	functionMatch.put("Midyear population 5yr", "MidyearPopulation5yr");
-	functionMatch.put("Midyear population male 5yr", "MidyearPopulationMale5yr");
-	functionMatch.put("Midyear population female 5yr", "MidyearPopulationFemale5yr");
-	//TODO NA DW AFTO
+	functionMatch.put("Midyear population 5yr", "MidyearPopulation");
+	functionMatch.put("Midyear population male 5yr", "MidyearPopulationMale");
+	functionMatch.put("Midyear population female 5yr", "MidyearPopulationFemale");
 	functionMatch.put("Population by age", "PopulationByAge");
 	functionMatch.put("Infant mortality", "InfantMortality");
 	functionMatch.put("Infant mortality male", "InfantMortalityMale");

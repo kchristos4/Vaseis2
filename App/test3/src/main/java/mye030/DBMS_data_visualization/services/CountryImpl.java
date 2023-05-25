@@ -217,6 +217,7 @@ public class CountryImpl implements CountryService{
 
 
 	@Override
+	@Transactional
 	public List<MidyearPopulationAgeCountryCode> findAllMidyearPopulationAgeCountryCode() {
 		return MidyearPopulationAgeCountryCodeRepository.findAll();
 	}
@@ -227,6 +228,7 @@ public class CountryImpl implements CountryService{
 
 
 	@Override
+	@Transactional
 	public List<MidyearPopulationAgeCountryCode> findAllByIsoCodeMidyearPopulationAgeCountryCode(int isoCode) {
 		return MidyearPopulationAgeCountryCodeRepository.findAllById_ISOCode(isoCode);
 	}

@@ -186,7 +186,7 @@ for i in range(len(files)):
     print(f" {i} : {files[i]}")
 
 print()
-filePosition = input(f"choose file number [0 - {len(files)-1}] ( -1 -> Modify all csv files in folder ) : ")
+filePosition = input(f"choose file number [0 - {len(files)-1}] ( -1 -> Modify all files in folder ) : ")
 
 columnsToMatch = []
 column = ''

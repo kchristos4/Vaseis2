@@ -60,7 +60,7 @@ public class GraphicalInterface extends JFrame implements CommandLineRunner{
 
 
 
-private JPanel contentPane;
+  private JPanel contentPane;
   @Autowired
   private CountryDAO CountryRepository;
   @Autowired
