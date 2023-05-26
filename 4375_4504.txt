@@ -1,0 +1,14 @@
+ΚΑΡΑΓΙΑΝΝΙΔΗΣ ΧΡΗΣΤΟΣ 4375
+ΤΡΙΑΝΤΑΦΥΛΛΟΠΟΥΛΟΣ ΑΝΔΡΕΑΣ 4504
+
+Github repo : https://github.com/kchristos4/Vaseis2
+Youtube video : https://www.youtube.com/watch?v=zWj_2rZ1SZo
+
+Επειδη δεν μας αφηνε το GitHub να ανεβασουμε αρχεια μεγαλύτερα των 100 ΜΒ
+
+εδω ειναι το link για το backup της βασης (2.3GB):
+https://uoioannina-my.sharepoint.com/:f:/g/personal/cs04375_uoi_gr/EvEh_FeOxhJOm9C28mCuSnMByrqcpuiHi-yLgtxrfeGL7A?e=3Tdt3W
+
+επισης για τον ιδιο λογο δεν ειναι ανεβασμενο στο gitHub το midyear_population_age_country_code.csv (1.7GB)
+και το modified_midyear_population_age_country_code.csv(1,7GB) το τελευταιο ομως θα δημιουργηθει αυτοματα αν
+τρεξετε το GenericTransformation.py για το midyear_population_age_country_code.csv
